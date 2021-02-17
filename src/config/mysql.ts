@@ -1,37 +1,54 @@
-import mysql from 'mysql2';
+import mysql2 from 'mysql2';
 import config from './config';
 
-const params = {
-    user: config.mysql.user,
-    password: config.mysql.password,
-    host: config.mysql.host,
-    database: config.mysql.database
-};
+export class DBconnection {
+    db: any;
 
-const Connect = async () =>
-    new Promise<mysql.Connection>((resolve, reject) => {
-        const connection = mysql.createConnection(params);
+    constructor() {
+        this.db = mysql2.createPool({
+            user: config.mysql.user,
+            password: config.mysql.password,
+            host: config.mysql.host,
+            database: config.mysql.database
+        })
 
-        connection.connect((error) => {
-            if (error) {
-                reject(error);
-                return;
+        this.checkConnection()
+    }
+
+    checkConnection() {
+        this.db.getConnection((err, connection) => {
+            if (err) {
+                if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+                    console.error('Database connection was closed.');
+                }
+                if (err.code === 'ER_CON_COUNT_ERROR') {
+                    console.error('Database has too many connections.');
+                }
+                if (err.code === 'ECONNREFUSED') {
+                    console.error('Database connection was refused.');
+                }
             }
-
-            resolve(connection);
-        });
-    });
-
-const Query = async (connection: mysql.Connection, query: string) =>
-    new Promise((resolve, reject) => {
-        connection.query(query, connection, (error, result) => {
-            if (error) {
-                reject(error);
-                return;
+            if (connection) {
+                connection.release();
             }
-
-            resolve(result);
+            return
         });
-    });
+    }
 
-export { Connect, Query };
+    query = async (sql, values) => {
+        return new Promise((resolve, reject) => {
+            const callback = (error, result) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(result);
+            }
+            // execute will internally call prepare and query
+            this.db.execute(sql, values, callback);
+        }).catch(err => {
+            throw err;
+        });
+
+    }
+}

@@ -1,36 +1,14 @@
 import {NextFunction, Request, Response} from "express";
-import {Connect, Query} from "../config/mysql";
+import {RecipeModel} from './models'
 
-const getAllRecipes = (req: Request, res: Response, next: NextFunction) => {
-    let query = 'SELECT * FROM recipes';
+const getAllRecipes = async (req: Request, res: Response, next: NextFunction) => {
 
-    Connect()
-    .then((connection) => {
-        Query(connection, query)
-            .then((results) => {
+    let recipes = await new RecipeModel().getAllRecipes();
 
-                return res.status(200).json({
-                    results
-                });
-            })
-            .catch((error) => {
-
-                return res.status(200).json({
-                    message: error.message,
-                    error
-                });
-            })
-            .finally(() => {
-                connection.end();
-            });
-    })
-    .catch((error) => {
-
-        return res.status(200).json({
-            message: error.message,
-            error
-        });
+    return res.status(200).json({
+        recipes
     });
+
 }
 
 export default {getAllRecipes}

@@ -1,8 +1,11 @@
-export class RecipeModel {
-    id: Number
-    description: String
+import { DBconnection } from  '../config/mysql'
 
-    constructor(description: String) {
-        this.description = description
+export class RecipeModel {
+    tableName = 'recipes';
+
+    getAllRecipes = async (params = {}) => {
+        let sql = `SELECT * FROM ${this.tableName}`
+
+        return await new DBconnection().query(sql, '')
     }
 }
