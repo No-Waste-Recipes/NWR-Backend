@@ -5,9 +5,9 @@ export class IngredientModel {
 
     getIngredients = async (name = {}) => {
 
-        // TODO: fix that name gets used in value
-        let sql = `SELECT * FROM ${this.tableName} WHERE name LIKE '%${name}%'`
+        let nameTransformed: String =  `%${name}%`
+        let sql = `SELECT * FROM ${this.tableName} WHERE name LIKE ?`
 
-        return await new DBconnection().query(sql, [])
+        return await new DBconnection().query(sql, [nameTransformed])
     }
 }

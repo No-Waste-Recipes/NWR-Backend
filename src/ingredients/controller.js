@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
 const getIngredientsByName = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let searchParameter = req.query.query;
+    let searchParameter = req.query.name;
     let ingredients = yield new models_1.IngredientModel().getIngredients(searchParameter);
     return res.status(200).json({
         ingredients
