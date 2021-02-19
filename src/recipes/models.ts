@@ -8,4 +8,9 @@ export class RecipeModel {
 
         return await new DBconnection().query(sql, '')
     }
+
+    getPopularRecipes = async (params = {}) => {
+
+    }
+
 }
