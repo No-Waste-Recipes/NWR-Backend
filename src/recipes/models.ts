@@ -1,7 +1,7 @@
 import { DBconnection } from  '../config/mysql'
 
 export class RecipeModel {
-    tableName = 'recipes';
+    tableName = 'recipe';
 
     getAllRecipes = async (params = {}) => {
         let sql = `SELECT * FROM ${this.tableName}`

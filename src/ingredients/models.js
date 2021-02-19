@@ -13,11 +13,15 @@ exports.IngredientModel = void 0;
 const mysql_1 = require("../config/mysql");
 class IngredientModel {
     constructor() {
-        this.tableName = 'ingredients';
-        this.getIngredients = (name = {}) => __awaiter(this, void 0, void 0, function* () {
+        this.tableName = 'ingredient';
+        this.getIngredients = (name, excluded = {}) => __awaiter(this, void 0, void 0, function* () {
+            let excludedString = "(" + excluded + ")";
             let nameTransformed = `%${name}%`;
-            // TODO: fix that name gets used in value
             let sql = `SELECT * FROM ${this.tableName} WHERE name LIKE ?`;
+            console.log(excluded);
+            if (excluded) {
+                sql += ` AND id not in ${excludedString}`;
+            }
             return yield new mysql_1.DBconnection().query(sql, [nameTransformed]);
         });
     }
