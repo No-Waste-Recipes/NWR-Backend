@@ -18,7 +18,6 @@ class IngredientModel {
             let excludedString = "(" + excluded + ")";
             let nameTransformed = `%${name}%`;
             let sql = `SELECT * FROM ${this.tableName} WHERE name LIKE ?`;
-            console.log(excluded);
             if (excluded) {
                 sql += ` AND id not in ${excludedString}`;
             }
