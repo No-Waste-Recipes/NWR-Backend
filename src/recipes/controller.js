@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
 const getAllRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req);
     let recipes = yield new models_1.RecipeModel().getAllRecipes();
     return res.status(200).json({
         recipes

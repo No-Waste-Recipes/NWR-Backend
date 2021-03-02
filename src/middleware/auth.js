@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const models_1 = require("../user/models");
-const HttpException = require("../utils/HttpException");
 const jwt = require('jsonwebtoken');
 dotenv_1.default.config();
 const auth = () => {

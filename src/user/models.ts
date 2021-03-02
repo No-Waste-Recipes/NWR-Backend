@@ -8,9 +8,18 @@ export class UserModel {
         return await new DBconnection().query(sql, '')
     }
 
-    createUser = async ({username, password, first_name, last_name, email}) => {
+    createUser = async ({username, password, firstName, lastName, email}) => {
         const sql = `INSERT INTO ${this.tableName} (username, password, first_name, last_name, email) VALUES (?,?,?,?,?)`
+        return await new DBconnection().query(sql, [username, password, firstName, lastName, email])
+    }
 
-        return await new DBconnection().query(sql, [username, password, first_name, last_name, email])
+    findOne = async ({email}) => {
+
+        const sql = `SELECT * FROM ${this.tableName} WHERE email = ?`;
+
+        const result = await new DBconnection().query(sql, [email])
+
+        // return back the first row (user)
+        return result[0];
     }
 }
