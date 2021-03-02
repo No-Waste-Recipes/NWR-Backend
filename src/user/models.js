@@ -9,21 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.IngredientModel = void 0;
+exports.UserModel = void 0;
 const mysql_1 = require("../config/mysql");
-class IngredientModel {
+class UserModel {
     constructor() {
-        this.tableName = 'ingredient';
-        this.getIngredients = (name, excluded = {}) => __awaiter(this, void 0, void 0, function* () {
-            let excludedString = "(" + excluded + ")";
-            let nameTransformed = `%${name}%`;
-            let sql = `SELECT * FROM ${this.tableName} WHERE name LIKE ?`;
-            if (excluded) {
-                sql += ` AND id not in ${excludedString}`;
-            }
-            return yield new mysql_1.DBconnection().query(sql, [nameTransformed]);
+        this.tableName = 'user';
+        this.getUser = ({ id }) => __awaiter(this, void 0, void 0, function* () {
+            console.log(id);
+            const sql = `SELECT * FROM ${this.tableName} WHERE id = ${id}`;
+            return yield new mysql_1.DBconnection().query(sql, '');
+        });
+        this.createUser = ({ username, password, first_name, last_name, email }) => __awaiter(this, void 0, void 0, function* () {
+            const sql = `INSERT INTO ${this.tableName} (username, password, first_name, last_name, email) VALUES (?,?,?,?,?)`;
+            return yield new mysql_1.DBconnection().query(sql, [username, password, first_name, last_name, email]);
         });
     }
 }
-exports.IngredientModel = IngredientModel;
+exports.UserModel = UserModel;
 //# sourceMappingURL=models.js.map
