@@ -8,6 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
 const bcrypt = require('bcryptjs');
@@ -18,12 +29,29 @@ const creatUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const json = result;
     const secretKey = process.env.SECRET_JWT || "";
     const token = jwt.sign({ user_id: json.insertId.toString() }, secretKey, { expiresIn: '24h' });
-    res.status(201).send(token);
+    res.status(201).send("Successfully created");
 });
 const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.password) {
         req.body.password = yield bcrypt.hash(req.body.password, 8);
     }
 });
-exports.default = { creatUser };
+const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password: pass } = req.body;
+    const user = yield new models_1.UserModel().findOne({ email });
+    if (!user && !pass) {
+        return res.status(401).send("User doesn't exist");
+    }
+    const isMatch = yield bcrypt.compare(pass, user.password);
+    if (!isMatch) {
+        return res.status(401).send('Email or password is wrong');
+    }
+    const secretKey = process.env.SECRET_JWT || "";
+    const token = jwt.sign({ user_id: user.id.toString() }, secretKey, {
+        expiresIn: '24h'
+    });
+    const { password } = user, userWithoutPassword = __rest(user, ["password"]);
+    res.send({ user: Object.assign({}, userWithoutPassword), token });
+});
+exports.default = { creatUser, loginUser };
 //# sourceMappingURL=controller.js.map
