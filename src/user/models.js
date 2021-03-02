@@ -9,24 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecipeModel = void 0;
+exports.UserModel = void 0;
 const mysql_1 = require("../config/mysql");
-class RecipeModel {
+class UserModel {
     constructor() {
-        this.tableName = 'recipe';
-        this.getAllRecipes = (params = {}) => __awaiter(this, void 0, void 0, function* () {
-            let sql = `SELECT * FROM ${this.tableName}`;
+        this.tableName = 'user';
+        this.getUser = ({ id }) => __awaiter(this, void 0, void 0, function* () {
+            const sql = `SELECT * FROM ${this.tableName} WHERE id = ${id}`;
             return yield new mysql_1.DBconnection().query(sql, '');
         });
-        this.getPopularRecipes = (params = {}) => __awaiter(this, void 0, void 0, function* () {
-        });
-        this.getFilteredRecipes = (ingredients = {}) => __awaiter(this, void 0, void 0, function* () {
-            let ingredientsString = "(" + ingredients + ")";
-            let ingredientsAmount = ingredients.toString().replace(/,/g, '').length;
-            let sql = `SELECT id, name FROM ${this.tableName} r join recipe_ingredient ri on ri.recipe_id = r.id where ri.ingredient_id in ${ingredientsString} group by r.id having count(distinct ri.ingredient_id) = ${ingredientsAmount}`;
-            return yield new mysql_1.DBconnection().query(sql, '');
+        this.createUser = ({ username, password, first_name, last_name, email }) => __awaiter(this, void 0, void 0, function* () {
+            const sql = `INSERT INTO ${this.tableName} (username, password, first_name, last_name, email) VALUES (?,?,?,?,?)`;
+            return yield new mysql_1.DBconnection().query(sql, [username, password, first_name, last_name, email]);
         });
     }
 }
-exports.RecipeModel = RecipeModel;
+exports.UserModel = UserModel;
 //# sourceMappingURL=models.js.map
