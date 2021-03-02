@@ -1,4 +1,4 @@
-import { DBconnection } from  '../config/mysql'
+import {DBconnection} from '../config/mysql'
 
 export class RecipeModel {
     tableName = 'recipe';
@@ -10,10 +10,12 @@ export class RecipeModel {
     }
 
     getPopularRecipes = async (params = {}) => {
+        let sql = `SELECT * FROM ${this.tableName} ORDER BY popularity DESC LIMIT 5`
 
+        return await new DBconnection().query(sql, '')
     }
 
-    getFilteredRecipes = async (ingredients ={}) => {
+    getFilteredRecipes = async (ingredients = {}) => {
 
         let ingredientsString = "(" + ingredients + ")"
 
