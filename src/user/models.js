@@ -15,7 +15,6 @@ class UserModel {
     constructor() {
         this.tableName = 'user';
         this.getUser = ({ id }) => __awaiter(this, void 0, void 0, function* () {
-            console.log(id);
             const sql = `SELECT * FROM ${this.tableName} WHERE id = ${id}`;
             return yield new mysql_1.DBconnection().query(sql, '');
         });
