@@ -18,6 +18,8 @@ class RecipeModel {
             let sql = `SELECT * FROM ${this.tableName}`;
             return yield new mysql_1.DBconnection().query(sql, '');
         });
+        this.getPopularRecipes = (params = {}) => __awaiter(this, void 0, void 0, function* () {
+        });
     }
 }
 exports.RecipeModel = RecipeModel;

@@ -16,5 +16,11 @@ const getAllRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         recipes
     });
 });
-exports.default = { getAllRecipes };
+const getPopularRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let recipes = yield new models_1.RecipeModel().getPopularRecipes();
+    return res.status(200).json({
+        recipes
+    });
+});
+exports.default = { getAllRecipes, getPopularRecipes };
 //# sourceMappingURL=controller.js.map
