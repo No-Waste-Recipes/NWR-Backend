@@ -23,13 +23,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 const creatUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield hashPassword(req);
-    const result = yield new models_1.UserModel().createUser(req.body);
-    const json = result;
-    const secretKey = process.env.SECRET_JWT || "";
-    const token = jwt.sign({ user_id: json.insertId.toString() }, secretKey, { expiresIn: '24h' });
-    res.status(201).send("Successfully created");
+    const { email, username, password, first_name, last_name, description } = req.body;
+    const result = yield prisma.user.create({
+        data: {
+            email,
+            username,
+            password,
+            first_name,
+            last_name,
+            description
+        },
+    });
+    res.status(201).send(result);
 });
 const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.password) {
