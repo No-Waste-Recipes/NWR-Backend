@@ -20,7 +20,6 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const models_1 = require("./models");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const client_1 = require("@prisma/client");
@@ -47,7 +46,11 @@ const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password: pass } = req.body;
-    const user = yield new models_1.UserModel().findOne({ email });
+    const user = yield prisma.user.findUnique({
+        where: {
+            email
+        }
+    });
     if (!user && !pass) {
         return res.status(401).send("User doesn't exist");
     }

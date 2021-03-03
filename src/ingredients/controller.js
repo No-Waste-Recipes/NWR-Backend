@@ -9,11 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const models_1 = require("./models");
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 const getIngredientsByName = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let searchParameter = req.query.name;
-    let excluded = req.query.excluded;
-    let ingredients = yield new models_1.IngredientModel().getIngredients(searchParameter, excluded);
+    const { name, excluded } = req.body;
+    console.log(name, excluded);
+    const ingredients = yield prisma.ingredient.findMany({
+        where: {
+            name: {
+                contains: name
+            },
+            id: {
+                notIn: [excluded]
+            }
+        }
+    });
     return res.status(200).json({
         ingredients
     });

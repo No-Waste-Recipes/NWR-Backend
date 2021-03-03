@@ -1,11 +1,20 @@
 import {NextFunction, Request, Response} from "express";
-import {IngredientModel} from './models'
+import {PrismaClient} from "@prisma/client";
+const prisma = new PrismaClient()
 
 const getIngredientsByName = async (req: Request, res: Response, next: NextFunction) => {
+    const { name, excluded } = req.body
 
-    let searchParameter = req.query.name;
-    let excluded = req.query.excluded;
-    let ingredients = await new IngredientModel().getIngredients(searchParameter, excluded);
+    const ingredients = await prisma.ingredient.findMany({
+        where: {
+            name: {
+                contains: name
+            },
+            id: {
+                notIn: [excluded]
+            }
+        }
+    })
 
     return res.status(200).json({
         ingredients
