@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 const getAllRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let recipes = yield new models_1.RecipeModel().getAllRecipes();
-    return res.status(200).json({
-        recipes
-    });
+    const recipes = yield prisma.recipe.findMany();
+    return res.status(200).json(recipes);
 });
 const getFilteredRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let ingredients = req.query.ingredients;
@@ -23,5 +23,18 @@ const getFilteredRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0,
         recipes
     });
 });
-exports.default = { getAllRecipes, getFilteredRecipes };
+const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { title, description, userId } = req.body;
+    const result = yield prisma.recipe.create({
+        data: {
+            title: title,
+            description,
+            userId: userId,
+        },
+    });
+    return res.status(200).json({
+        result
+    });
+});
+exports.default = { getAllRecipes, getFilteredRecipes, CreateRecipe };
 //# sourceMappingURL=controller.js.map
