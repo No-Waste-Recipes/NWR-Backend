@@ -16,6 +16,12 @@ const getAllRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         recipes
     });
 });
+const getPopularRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let recipes = yield new models_1.RecipeModel().getPopularRecipes();
+    return res.status(200).json({
+        recipes
+    });
+});
 const getFilteredRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let ingredients = req.query.ingredients;
     let recipes = yield new models_1.RecipeModel().getFilteredRecipes(ingredients);
@@ -23,5 +29,5 @@ const getFilteredRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0,
         recipes
     });
 });
-exports.default = { getAllRecipes, getFilteredRecipes };
+exports.default = { getAllRecipes, getFilteredRecipes, getPopularRecipes };
 //# sourceMappingURL=controller.js.map

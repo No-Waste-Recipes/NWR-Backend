@@ -1,4 +1,4 @@
-import { DBconnection } from  '../config/mysql'
+import {DBconnection} from '../config/mysql'
 
 export class RecipeModel {
     tableName = 'recipe';
@@ -9,7 +9,13 @@ export class RecipeModel {
         return await new DBconnection().query(sql, '')
     }
 
-    getFilteredRecipes = async (ingredients ={}) => {
+    getPopularRecipes = async (params = {}) => {
+        let sql = `SELECT * FROM ${this.tableName} ORDER BY popularity DESC LIMIT 5`
+
+        return await new DBconnection().query(sql, '')
+    }
+
+    getFilteredRecipes = async (ingredients = {}) => {
 
         let ingredientsString = "(" + ingredients + ")"
 
@@ -19,4 +25,5 @@ export class RecipeModel {
 
         return await new DBconnection().query(sql, '')
     }
+
 }

@@ -18,6 +18,10 @@ class RecipeModel {
             let sql = `SELECT * FROM ${this.tableName}`;
             return yield new mysql_1.DBconnection().query(sql, '');
         });
+        this.getPopularRecipes = (params = {}) => __awaiter(this, void 0, void 0, function* () {
+            let sql = `SELECT * FROM ${this.tableName} ORDER BY popularity DESC LIMIT 5`;
+            return yield new mysql_1.DBconnection().query(sql, '');
+        });
         this.getFilteredRecipes = (ingredients = {}) => __awaiter(this, void 0, void 0, function* () {
             let ingredientsString = "(" + ingredients + ")";
             let ingredientsAmount = ingredients.toString().replace(/,/g, '').length;
