@@ -11,7 +11,7 @@ const getIngredientsByName = async (req: Request, res: Response, next: NextFunct
                 contains: name
             },
             id: {
-                notIn: [excluded]
+                notIn: excluded
             }
         }
     })

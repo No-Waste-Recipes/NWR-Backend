@@ -13,14 +13,13 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const getIngredientsByName = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, excluded } = req.body;
-    console.log(name, excluded);
     const ingredients = yield prisma.ingredient.findMany({
         where: {
             name: {
                 contains: name
             },
             id: {
-                notIn: [excluded]
+                notIn: excluded
             }
         }
     });
