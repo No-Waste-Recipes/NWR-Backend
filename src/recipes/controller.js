@@ -22,6 +22,19 @@ const getFilteredRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0,
     //     recipes
     // })
 });
+const getPopularRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const recipes = yield prisma.recipe.findMany({
+        orderBy: [
+            {
+                popularity: 'desc',
+            },
+        ],
+        take: 5
+    });
+    return res.status(200).json({
+        recipes
+    });
+});
 const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description, userId } = req.body;
     const result = yield prisma.recipe.create({
@@ -35,5 +48,5 @@ const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         result
     });
 });
-exports.default = { getAllRecipes, getFilteredRecipes, CreateRecipe };
+exports.default = { getAllRecipes, getFilteredRecipes, CreateRecipe, getPopularRecipes };
 //# sourceMappingURL=controller.js.map

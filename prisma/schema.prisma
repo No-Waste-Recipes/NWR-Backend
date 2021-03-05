@@ -27,6 +27,7 @@ model Recipe {
   status      Status       @default(TO_BE_APPROVED)
   userId      Int
   ingredient  Ingredient[]
+  popularity  Int          @default(0)
 }
 
 enum Status {

@@ -19,6 +19,21 @@ const getFilteredRecipes =  async (req: Request, res: Response, next: NextFuncti
     // })
 }
 
+const getPopularRecipes = async (req: Request, res: Response, next: NextFunction) => {
+    const recipes = await prisma.recipe.findMany({
+        orderBy: [
+            {
+                popularity: 'desc',
+            },
+        ],
+        take: 5
+    })
+
+    return res.status(200).json({
+        recipes
+    });
+}
+
 const CreateRecipe = async (req: Request, res: Response, next: NextFunction) => {
 
     const { title, description, userId } = req.body
@@ -35,4 +50,4 @@ const CreateRecipe = async (req: Request, res: Response, next: NextFunction) => 
     })
 }
 
-export default {getAllRecipes, getFilteredRecipes, CreateRecipe}
+export default {getAllRecipes, getFilteredRecipes, CreateRecipe, getPopularRecipes}
