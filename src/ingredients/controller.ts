@@ -22,4 +22,4 @@ const getIngredientsByName = async (req: Request, res: Response, next: NextFunct
 
 }
 
-export default {getIngredients: getIngredientsByName}
+export default {getIngredientsByName}

@@ -27,5 +27,5 @@ const getIngredientsByName = (req, res, next) => __awaiter(void 0, void 0, void 
         ingredients
     });
 });
-exports.default = { getIngredients: getIngredientsByName };
+exports.default = { getIngredientsByName };
 //# sourceMappingURL=controller.js.map

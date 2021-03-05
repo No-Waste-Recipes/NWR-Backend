@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const models_1 = require("./models");
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const getAllRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -17,11 +16,11 @@ const getAllRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     return res.status(200).json(recipes);
 });
 const getFilteredRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let ingredients = req.query.ingredients;
-    let recipes = yield new models_1.RecipeModel().getFilteredRecipes(ingredients);
-    return res.status(200).json({
-        recipes
-    });
+    const { ingredients } = req.body;
+    // let recipes = await new RecipeModel().getFilteredRecipes(ingredients);
+    // return res.status(200).json({
+    //     recipes
+    // })
 });
 const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description, userId } = req.body;

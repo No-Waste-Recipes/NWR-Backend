@@ -10,13 +10,13 @@ const getAllRecipes = async (req: Request, res: Response, next: NextFunction) =>
 
 const getFilteredRecipes =  async (req: Request, res: Response, next: NextFunction) => {
 
-    let ingredients = req.query.ingredients
+    const { ingredients } = req.body
 
-    let recipes = await new RecipeModel().getFilteredRecipes(ingredients);
+    // let recipes = await new RecipeModel().getFilteredRecipes(ingredients);
 
-    return res.status(200).json({
-        recipes
-    })
+    // return res.status(200).json({
+    //     recipes
+    // })
 }
 
 const CreateRecipe = async (req: Request, res: Response, next: NextFunction) => {

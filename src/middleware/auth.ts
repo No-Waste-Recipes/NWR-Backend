@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
-import {UserModel} from "../user/models";
+import {PrismaClient} from "@prisma/client";
+const prisma = new PrismaClient()
 
 const jwt = require('jsonwebtoken');
 dotenv.config()
@@ -18,9 +19,11 @@ const auth = () => {
             const secretKey = process.env.SECRET_JWT || "";
 
             const decoded = jwt.verify(token, secretKey)
-            const user = await new UserModel().getUser({ id: decoded.user_id })
-
-            req.currentUser = user;
+            req.currentUser = await prisma.user.findUnique({
+                where: {
+                    id: decoded.user_id
+                }
+            });
             next();
 
         } catch (e) {

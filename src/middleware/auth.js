@@ -13,7 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
-const models_1 = require("../user/models");
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 const jwt = require('jsonwebtoken');
 dotenv_1.default.config();
 const auth = () => {
@@ -28,8 +29,11 @@ const auth = () => {
                 const token = authHeader.replace(bearer, '');
                 const secretKey = process.env.SECRET_JWT || "";
                 const decoded = jwt.verify(token, secretKey);
-                const user = yield new models_1.UserModel().getUser({ id: decoded.user_id });
-                req.currentUser = user;
+                req.currentUser = yield prisma.user.findUnique({
+                    where: {
+                        id: decoded.user_id
+                    }
+                });
                 next();
             }
             catch (e) {
