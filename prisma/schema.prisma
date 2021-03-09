@@ -28,6 +28,7 @@ model Recipe {
   userId      Int
   ingredient  Ingredient[]
   popularity  Int          @default(0)
+  up_votes     Int          @default(0)
 }
 
 enum Status {
