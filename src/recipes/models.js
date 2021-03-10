@@ -13,9 +13,30 @@ exports.RecipeModel = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 class RecipeModel {
-    getAllRecipes() {
+    getRecipes({ ingredients }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.recipe.findMany();
+            const payload = {
+                where: {
+                    AND: undefined
+                }
+            };
+            if (ingredients) {
+                const whereAnd = [];
+                if (ingredients.length > 1) {
+                    ingredients.forEach((id) => {
+                        whereAnd.push({
+                            ingredient: { some: { ingredientId: parseInt(id) } }
+                        });
+                    });
+                }
+                else {
+                    whereAnd.push({
+                        ingredient: { some: { ingredientId: parseInt(ingredients) } }
+                    });
+                }
+                payload.where.AND = whereAnd;
+            }
+            return yield prisma.recipe.findMany(payload);
         });
     }
     getPopularRecipes() {

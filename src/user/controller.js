@@ -37,7 +37,6 @@ const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
 const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password: pass } = req.body;
     const user = yield userModel.loginUser(req.body);
-    console.log(user);
     if (!user && !pass) {
         return res.status(401).send("User doesn't exist");
     }

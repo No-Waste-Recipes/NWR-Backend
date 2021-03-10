@@ -20,14 +20,22 @@ model User {
 }
 
 model Recipe {
-  id          Int          @id @default(autoincrement())
+  id          Int                 @id @default(autoincrement())
   title       String
   description String
-  user        User         @relation(fields: [userId], references: [id])
-  status      Status       @default(TO_BE_APPROVED)
+  user        User                @relation(fields: [userId], references: [id])
+  status      Status              @default(TO_BE_APPROVED)
   userId      Int
-  ingredient  Ingredient[]
-  popularity  Int          @default(0)
+  ingredient  RecipeIngredients[]
+  popularity  Int                 @default(0)
+}
+
+model RecipeIngredients {
+  id           Int        @id @default(autoincrement())
+  recipe       Recipe     @relation(fields: [recipeId], references: [id])
+  ingredients  Ingredient @relation(fields: [ingredientId], references: [id])
+  recipeId     Int
+  ingredientId Int
 }
 
 enum Status {
@@ -44,10 +52,10 @@ model Tag {
 }
 
 model Ingredient {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
+  id          Int                 @id @default(autoincrement())
+  name        String              @unique
   description String?
-  recipe      Recipe[]
+  recipe      RecipeIngredients[]
 }
 
 model Category {
