@@ -3,6 +3,6 @@ import controller from './controller';
 
 const router = express.Router();
 
-router.get('/all', controller.getIngredients)
+router.get('', controller.getIngredients)
 
 export = router

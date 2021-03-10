@@ -10,13 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
-const getIngredientsByName = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let searchParameter = req.query.name;
-    let excluded = req.query.excluded;
-    let ingredients = yield new models_1.IngredientModel().getIngredients(searchParameter, excluded);
+const ingredientModel = new models_1.IngredientModel();
+const getIngredients = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const ingredients = yield ingredientModel.getIngredients(req.body);
     return res.status(200).json({
         ingredients
     });
 });
-exports.default = { getIngredients: getIngredientsByName };
+exports.default = { getIngredients };
 //# sourceMappingURL=controller.js.map

@@ -20,16 +20,14 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const models_1 = require("./models");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const models_1 = require("./models");
+const userModel = new models_1.UserModel();
 const creatUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield hashPassword(req);
-    const result = yield new models_1.UserModel().createUser(req.body);
-    const json = result;
-    const secretKey = process.env.SECRET_JWT || "";
-    const token = jwt.sign({ user_id: json.insertId.toString() }, secretKey, { expiresIn: '24h' });
-    res.status(201).send("Successfully created");
+    const result = yield userModel.createUser(req.body);
+    res.status(201).send(result);
 });
 const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.password) {
@@ -38,7 +36,8 @@ const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password: pass } = req.body;
-    const user = yield new models_1.UserModel().findOne({ email });
+    const user = yield userModel.loginUser(req.body);
+    console.log(user);
     if (!user && !pass) {
         return res.status(401).send("User doesn't exist");
     }

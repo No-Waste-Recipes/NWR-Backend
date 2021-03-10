@@ -10,18 +10,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.IngredientModel = void 0;
-const mysql_1 = require("../config/mysql");
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 class IngredientModel {
-    constructor() {
-        this.tableName = 'ingredient';
-        this.getIngredients = (name, excluded = {}) => __awaiter(this, void 0, void 0, function* () {
-            let excludedString = "(" + excluded + ")";
-            let nameTransformed = `%${name}%`;
-            let sql = `SELECT * FROM ${this.tableName} WHERE name LIKE ?`;
-            if (excluded) {
-                sql += ` AND id not in ${excludedString}`;
-            }
-            return yield new mysql_1.DBconnection().query(sql, [nameTransformed]);
+    getIngredients({ name, excluded }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.ingredient.findMany({
+                where: {
+                    name: {
+                        contains: name
+                    },
+                    id: {
+                        notIn: excluded
+                    }
+                }
+            });
         });
     }
 }

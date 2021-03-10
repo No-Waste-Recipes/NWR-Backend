@@ -10,23 +10,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
-const mysql_1 = require("../config/mysql");
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 class UserModel {
-    constructor() {
-        this.tableName = 'user';
-        this.getUser = ({ id }) => __awaiter(this, void 0, void 0, function* () {
-            const sql = `SELECT * FROM ${this.tableName} WHERE id = ${id}`;
-            return yield new mysql_1.DBconnection().query(sql, '');
+    createUser({ email, username, password, first_name, last_name, description }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.create({
+                data: {
+                    email,
+                    username,
+                    password,
+                    first_name,
+                    last_name,
+                    description
+                },
+            });
         });
-        this.createUser = ({ username, password, firstName, lastName, email }) => __awaiter(this, void 0, void 0, function* () {
-            const sql = `INSERT INTO ${this.tableName} (username, password, first_name, last_name, email) VALUES (?,?,?,?,?)`;
-            return yield new mysql_1.DBconnection().query(sql, [username, password, firstName, lastName, email]);
-        });
-        this.findOne = ({ email }) => __awaiter(this, void 0, void 0, function* () {
-            const sql = `SELECT * FROM ${this.tableName} WHERE email = ?`;
-            const result = yield new mysql_1.DBconnection().query(sql, [email]);
-            // return back the first row (user)
-            return result[0];
+    }
+    loginUser({ email, password: pass }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.findUnique({
+                where: {
+                    email
+                }
+            });
         });
     }
 }

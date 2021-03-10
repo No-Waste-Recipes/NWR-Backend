@@ -10,23 +10,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipeModel = void 0;
-const mysql_1 = require("../config/mysql");
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 class RecipeModel {
-    constructor() {
-        this.tableName = 'recipe';
-        this.getAllRecipes = (params = {}) => __awaiter(this, void 0, void 0, function* () {
-            let sql = `SELECT * FROM ${this.tableName}`;
-            return yield new mysql_1.DBconnection().query(sql, '');
+    getAllRecipes() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.recipe.findMany();
         });
-        this.getPopularRecipes = (params = {}) => __awaiter(this, void 0, void 0, function* () {
-            let sql = `SELECT * FROM ${this.tableName} ORDER BY popularity DESC LIMIT 5`;
-            return yield new mysql_1.DBconnection().query(sql, '');
+    }
+    getPopularRecipes() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.recipe.findMany({
+                orderBy: [
+                    {
+                        popularity: 'desc',
+                    },
+                ],
+                take: 5
+            });
         });
-        this.getFilteredRecipes = (ingredients = {}) => __awaiter(this, void 0, void 0, function* () {
-            let ingredientsString = "(" + ingredients + ")";
-            let ingredientsAmount = ingredients.toString().replace(/,/g, '').length;
-            let sql = `SELECT id, name FROM ${this.tableName} r join recipe_ingredient ri on ri.recipe_id = r.id where ri.ingredient_id in ${ingredientsString} group by r.id having count(distinct ri.ingredient_id) = ${ingredientsAmount}`;
-            return yield new mysql_1.DBconnection().query(sql, '');
+    }
+    createRecipe({ title, description, userId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.recipe.create({
+                data: {
+                    title: title,
+                    description,
+                    userId: userId,
+                },
+            });
         });
     }
 }

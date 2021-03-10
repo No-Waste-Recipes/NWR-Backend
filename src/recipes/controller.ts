@@ -1,33 +1,26 @@
 import {NextFunction, Request, Response} from "express";
 import {RecipeModel} from './models'
+const recipe = new RecipeModel()
 
-const getAllRecipes = async (req: Request, res: Response, next: NextFunction) => {
-
-    let recipes = await new RecipeModel().getAllRecipes();
-
-    return res.status(200).json({
-        recipes
-    });
-
+const getRecipes = async (req: Request, res: Response, next: NextFunction) => {
+    const recipes = await recipe.getAllRecipes();
+    return res.status(200).json(recipes)
 }
 
 const getPopularRecipes = async (req: Request, res: Response, next: NextFunction) => {
-    let recipes = await new RecipeModel().getPopularRecipes();
+    const recipes = await recipe.getPopularRecipes();
 
     return res.status(200).json({
         recipes
     });
 }
 
-const getFilteredRecipes =  async (req: Request, res: Response, next: NextFunction) => {
-
-    let ingredients = req.query.ingredients
-
-    let recipes = await new RecipeModel().getFilteredRecipes(ingredients);
+const CreateRecipe = async (req: Request, res: Response, next: NextFunction) => {
+    const result = await recipe.createRecipe(req.body)
 
     return res.status(200).json({
-        recipes
+        result
     })
 }
 
-export default {getAllRecipes, getFilteredRecipes, getPopularRecipes}
+export default {getRecipes, CreateRecipe, getPopularRecipes}

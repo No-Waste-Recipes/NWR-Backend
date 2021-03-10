@@ -1,21 +1,18 @@
-import {json, NextFunction, Request, Response} from "express";
-import {UserModel} from "./models";
+import {NextFunction, Request, Response} from "express";
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+import {UserModel} from './models'
+const userModel = new UserModel()
+
 
 
 const creatUser = async (req: Request, res: Response, next: NextFunction) => {
 
     await hashPassword(req)
 
-    const result = await new UserModel().createUser(req.body)
+    const result = await userModel.createUser(req.body)
 
-    const json: any = result
-
-    const secretKey = process.env.SECRET_JWT || "";
-    const token = jwt.sign({user_id: json.insertId.toString()}, secretKey, { expiresIn: '24h'})
-
-    res.status(201).send("Successfully created")
+    res.status(201).send(result)
 }
 
 const hashPassword = async (req) => {
@@ -27,8 +24,9 @@ const hashPassword = async (req) => {
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password: pass} = req.body
 
-    const user = await new UserModel().findOne({ email })
+    const user = await userModel.loginUser(req.body)
 
+    console.log(user)
     if (!user && !pass) {
         return res.status(401).send("User doesn't exist")
     }

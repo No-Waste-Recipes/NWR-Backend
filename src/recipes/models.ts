@@ -1,29 +1,30 @@
-import {DBconnection} from '../config/mysql'
+import {PrismaClient} from "@prisma/client";
+const prisma = new PrismaClient()
 
 export class RecipeModel {
-    tableName = 'recipe';
 
-    getAllRecipes = async (params = {}) => {
-        let sql = `SELECT * FROM ${this.tableName}`
-
-        return await new DBconnection().query(sql, '')
+    async getAllRecipes() {
+        return await prisma.recipe.findMany()
     }
 
-    getPopularRecipes = async (params = {}) => {
-        let sql = `SELECT * FROM ${this.tableName} ORDER BY popularity DESC LIMIT 5`
-
-        return await new DBconnection().query(sql, '')
+    async getPopularRecipes() {
+        return await prisma.recipe.findMany({
+            orderBy: [
+                {
+                    popularity: 'desc',
+                },
+            ],
+            take: 5
+        })
     }
 
-    getFilteredRecipes = async (ingredients = {}) => {
-
-        let ingredientsString = "(" + ingredients + ")"
-
-        let ingredientsAmount = ingredients.toString().replace(/,/g, '').length
-
-        let sql = `SELECT id, name FROM ${this.tableName} r join recipe_ingredient ri on ri.recipe_id = r.id where ri.ingredient_id in ${ingredientsString} group by r.id having count(distinct ri.ingredient_id) = ${ingredientsAmount}`
-
-        return await new DBconnection().query(sql, '')
+    async createRecipe({ title, description, userId }) {
+        return await prisma.recipe.create({
+            data: {
+                title: title,
+                description,
+                userId: userId,
+            },
+        })
     }
-
 }

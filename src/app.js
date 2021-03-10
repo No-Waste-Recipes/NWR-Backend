@@ -20,10 +20,6 @@ app.use(express.json());
 app.use(cors());
 // Enable pre-flight
 app.options("*", cors());
-app.get("/url", function (req, res, next) {
-    const test = "test";
-    res.json([test]);
-});
 /* Routes */
 app.use('/recipes', route_1.default);
 app.use('/ingredients', route_2.default);

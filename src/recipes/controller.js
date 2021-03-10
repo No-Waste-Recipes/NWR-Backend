@@ -10,24 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
-const getAllRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let recipes = yield new models_1.RecipeModel().getAllRecipes();
-    return res.status(200).json({
-        recipes
-    });
+const recipe = new models_1.RecipeModel();
+const getRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const recipes = yield recipe.getAllRecipes();
+    return res.status(200).json(recipes);
 });
 const getPopularRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let recipes = yield new models_1.RecipeModel().getPopularRecipes();
+    const recipes = yield recipe.getPopularRecipes();
     return res.status(200).json({
         recipes
     });
 });
-const getFilteredRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let ingredients = req.query.ingredients;
-    let recipes = yield new models_1.RecipeModel().getFilteredRecipes(ingredients);
+const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield recipe.createRecipe(req.body);
     return res.status(200).json({
-        recipes
+        result
     });
 });
-exports.default = { getAllRecipes, getFilteredRecipes, getPopularRecipes };
+exports.default = { getRecipes, CreateRecipe, getPopularRecipes };
 //# sourceMappingURL=controller.js.map
