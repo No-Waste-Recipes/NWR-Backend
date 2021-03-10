@@ -3,9 +3,8 @@ import controller from './controller';
 
 const router = express.Router();
 
-router.get('/all', controller.getAllRecipes)
-router.post('/create', controller.CreateRecipe)
+router.get('', controller.getRecipes)
+router.post('', controller.CreateRecipe)
 router.get('/popular', controller.getPopularRecipes)
-router.get('/filtered', controller.getFilteredRecipes)
 
 export = router

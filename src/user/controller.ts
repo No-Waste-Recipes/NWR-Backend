@@ -1,25 +1,16 @@
 import {NextFunction, Request, Response} from "express";
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-import {PrismaClient} from "@prisma/client";
-const prisma = new PrismaClient()
+import {UserModel} from './models'
+const userModel = new UserModel()
+
 
 
 const creatUser = async (req: Request, res: Response, next: NextFunction) => {
 
     await hashPassword(req)
-    const { email, username, password, first_name, last_name, description } = req.body
 
-    const result = await prisma.user.create({
-        data: {
-            email,
-            username,
-            password,
-            first_name,
-            last_name,
-            description
-        },
-    })
+    const result = await userModel.createUser(req.body)
 
     res.status(201).send(result)
 }
@@ -33,12 +24,9 @@ const hashPassword = async (req) => {
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password: pass} = req.body
 
-    const user = await prisma.user.findUnique({
-        where: {
-            email
-        }
-    })
+    const user = await userModel.loginUser(req.body)
 
+    console.log(user)
     if (!user && !pass) {
         return res.status(401).send("User doesn't exist")
     }

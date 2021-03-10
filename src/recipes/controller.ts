@@ -1,33 +1,14 @@
 import {NextFunction, Request, Response} from "express";
 import {RecipeModel} from './models'
-import {PrismaClient} from "@prisma/client";
-const prisma = new PrismaClient()
+const recipe = new RecipeModel()
 
-const getAllRecipes = async (req: Request, res: Response, next: NextFunction) => {
-    const recipes = await prisma.recipe.findMany()
+const getRecipes = async (req: Request, res: Response, next: NextFunction) => {
+    const recipes = await recipe.getAllRecipes();
     return res.status(200).json(recipes)
 }
 
-const getFilteredRecipes =  async (req: Request, res: Response, next: NextFunction) => {
-
-    const { ingredients } = req.body
-
-    // let recipes = await new RecipeModel().getFilteredRecipes(ingredients);
-
-    // return res.status(200).json({
-    //     recipes
-    // })
-}
-
 const getPopularRecipes = async (req: Request, res: Response, next: NextFunction) => {
-    const recipes = await prisma.recipe.findMany({
-        orderBy: [
-            {
-                popularity: 'desc',
-            },
-        ],
-        take: 5
-    })
+    const recipes = await recipe.getPopularRecipes();
 
     return res.status(200).json({
         recipes
@@ -35,19 +16,11 @@ const getPopularRecipes = async (req: Request, res: Response, next: NextFunction
 }
 
 const CreateRecipe = async (req: Request, res: Response, next: NextFunction) => {
-
-    const { title, description, userId } = req.body
-    const result = await prisma.recipe.create({
-        data: {
-            title: title,
-            description,
-            userId: userId,
-        },
-    })
+    const result = await recipe.createRecipe(req.body)
 
     return res.status(200).json({
         result
     })
 }
 
-export default {getAllRecipes, getFilteredRecipes, CreateRecipe, getPopularRecipes}
+export default {getRecipes, CreateRecipe, getPopularRecipes}

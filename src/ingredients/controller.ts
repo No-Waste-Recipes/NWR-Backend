@@ -1,20 +1,11 @@
 import {NextFunction, Request, Response} from "express";
-import {PrismaClient} from "@prisma/client";
-const prisma = new PrismaClient()
+import {IngredientModel} from './models'
+const ingredientModel = new IngredientModel()
 
-const getIngredientsByName = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, excluded } = req.body
 
-    const ingredients = await prisma.ingredient.findMany({
-        where: {
-            name: {
-                contains: name
-            },
-            id: {
-                notIn: excluded
-            }
-        }
-    })
+const getIngredients = async (req: Request, res: Response, next: NextFunction) => {
+
+    const ingredients = await ingredientModel.getIngredients(req.body)
 
     return res.status(200).json({
         ingredients
@@ -22,4 +13,4 @@ const getIngredientsByName = async (req: Request, res: Response, next: NextFunct
 
 }
 
-export default {getIngredientsByName}
+export default {getIngredients}

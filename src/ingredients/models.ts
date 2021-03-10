@@ -1,3 +1,19 @@
+import {PrismaClient} from "@prisma/client";
+const prisma = new PrismaClient()
+
 export class IngredientModel {
-    tableName = 'ingredient';
+
+    async getIngredients({ name, excluded }) {
+        return await prisma.ingredient.findMany({
+            where: {
+                name: {
+                    contains: name
+                },
+                id: {
+                    notIn: excluded
+                }
+            }
+        })
+    }
+
 }

@@ -9,44 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
-const getAllRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const recipes = yield prisma.recipe.findMany();
+const models_1 = require("./models");
+const recipe = new models_1.RecipeModel();
+const getRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const recipes = yield recipe.getAllRecipes();
     return res.status(200).json(recipes);
 });
-const getFilteredRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { ingredients } = req.body;
-    // let recipes = await new RecipeModel().getFilteredRecipes(ingredients);
-    // return res.status(200).json({
-    //     recipes
-    // })
-});
 const getPopularRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const recipes = yield prisma.recipe.findMany({
-        orderBy: [
-            {
-                popularity: 'desc',
-            },
-        ],
-        take: 5
-    });
+    const recipes = yield recipe.getPopularRecipes();
     return res.status(200).json({
         recipes
     });
 });
 const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, description, userId } = req.body;
-    const result = yield prisma.recipe.create({
-        data: {
-            title: title,
-            description,
-            userId: userId,
-        },
-    });
+    const result = yield recipe.createRecipe(req.body);
     return res.status(200).json({
         result
     });
 });
-exports.default = { getAllRecipes, getFilteredRecipes, CreateRecipe, getPopularRecipes };
+exports.default = { getRecipes, CreateRecipe, getPopularRecipes };
 //# sourceMappingURL=controller.js.map
