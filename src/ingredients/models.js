@@ -16,12 +16,10 @@ class IngredientModel {
     getIngredients({ name, excluded }) {
         return __awaiter(this, void 0, void 0, function* () {
             let array = [];
-            if (excluded) {
-                const arr = excluded.split(',');
-                arr.forEach((id) => {
-                    array.push(parseInt(id));
-                });
-            }
+            const arr = excluded.split(',');
+            arr.forEach((id) => {
+                array.push(parseInt(id));
+            });
             return yield prisma.ingredient.findMany({
                 where: {
                     name: {
