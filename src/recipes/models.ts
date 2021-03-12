@@ -3,8 +3,29 @@ const prisma = new PrismaClient()
 
 export class RecipeModel {
 
-    async getAllRecipes() {
-        return await prisma.recipe.findMany()
+    async getRecipes({ingredients}) {
+        const payload = {
+            where: {
+                AND: undefined
+            }
+        }
+        if(ingredients) {
+            const whereAnd = []
+            if (ingredients.length > 1) {
+                ingredients.forEach((id) => {
+                    whereAnd.push({
+                        ingredient: { some: { ingredientId: parseInt(id)}}
+                    })
+                })
+            } else {
+                whereAnd.push({
+                    ingredient: { some: { ingredientId: parseInt(ingredients)}}
+                })
+            }
+            payload.where.AND = whereAnd
+        }
+        return await prisma.recipe.findMany(payload)
+
     }
 
     async getPopularRecipes() {
@@ -27,4 +48,5 @@ export class RecipeModel {
             },
         })
     }
+
 }

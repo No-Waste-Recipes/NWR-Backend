@@ -3,8 +3,8 @@ import {RecipeModel} from './models'
 const recipe = new RecipeModel()
 
 const getRecipes = async (req: Request, res: Response, next: NextFunction) => {
-    const recipes = await recipe.getAllRecipes();
-    return res.status(200).json(recipes)
+    const recipes = await recipe.getRecipes({ingredients: req.query.ingredients});
+    return res.status(200).json({recipes})
 }
 
 const getPopularRecipes = async (req: Request, res: Response, next: NextFunction) => {

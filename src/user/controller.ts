@@ -26,7 +26,6 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
 
     const user = await userModel.loginUser(req.body)
 
-    console.log(user)
     if (!user && !pass) {
         return res.status(401).send("User doesn't exist")
     }
