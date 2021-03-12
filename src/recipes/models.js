@@ -8,11 +8,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipeModel = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
+const slugify_1 = __importDefault(require("slugify"));
 class RecipeModel {
+    getRecipe({ slug }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.recipe.findUnique({
+                where: {
+                    slug: slug,
+                },
+                include: {
+                    user: {
+                        select: {
+                            username: true,
+                        }
+                    },
+                    ingredient: {
+                        include: {
+                            ingredients: true
+                        }
+                    }
+                }
+            });
+        });
+    }
     getRecipes({ ingredients }) {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = {
@@ -56,6 +81,7 @@ class RecipeModel {
             return yield prisma.recipe.create({
                 data: {
                     title: title,
+                    slug: slugify_1.default(title),
                     description,
                     userId: userId,
                 },

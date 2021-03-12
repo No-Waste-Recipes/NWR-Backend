@@ -1,7 +1,28 @@
 import {PrismaClient} from "@prisma/client";
 const prisma = new PrismaClient()
+import slugify from "slugify"
 
 export class RecipeModel {
+
+    async getRecipe({slug}) {
+        return await prisma.recipe.findUnique({
+            where: {
+                slug: slug,
+            },
+            include: {
+                user: {
+                    select: {
+                        username: true,
+                    }
+                },
+                ingredient: {
+                    include: {
+                        ingredients: true
+                    }
+                }
+            }
+        })
+    }
 
     async getRecipes({ingredients}) {
         const payload = {
@@ -43,6 +64,7 @@ export class RecipeModel {
         return await prisma.recipe.create({
             data: {
                 title: title,
+                slug: slugify(title),
                 description,
                 userId: userId,
             },

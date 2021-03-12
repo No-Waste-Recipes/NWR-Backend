@@ -22,6 +22,7 @@ model User {
 model Recipe {
   id          Int                 @id @default(autoincrement())
   title       String
+  slug        String              @unique
   description String
   user        User                @relation(fields: [userId], references: [id])
   status      Status              @default(TO_BE_APPROVED)
