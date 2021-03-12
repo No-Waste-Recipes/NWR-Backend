@@ -5,7 +5,7 @@ const ingredientModel = new IngredientModel()
 
 const getIngredients = async (req: Request, res: Response, next: NextFunction) => {
 
-    const ingredients = await ingredientModel.getIngredients({name: req.query.ingredients,
+    const ingredients = await ingredientModel.getIngredients({name: req.query.name,
         excluded: req.query.excluded})
 
     return res.status(200).json({
