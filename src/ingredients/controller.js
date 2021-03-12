@@ -12,7 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("./models");
 const ingredientModel = new models_1.IngredientModel();
 const getIngredients = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const ingredients = yield ingredientModel.getIngredients(req.body);
+    const ingredients = yield ingredientModel.getIngredients({ name: req.query.ingredients,
+        excluded: req.query.excluded });
     return res.status(200).json({
         ingredients
     });
