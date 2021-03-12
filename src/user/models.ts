@@ -23,4 +23,15 @@ export class UserModel {
             }
         })
     }
+
+    async getFavoriteRecipes({ id }) {
+        return await prisma.userRecipe.findMany({
+            where: {
+                userId: id
+            },
+            include: {
+                recipe: true
+            }
+        })
+    }
 }

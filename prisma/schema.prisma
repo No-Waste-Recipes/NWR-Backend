@@ -17,6 +17,15 @@ model User {
   description String?
   Recipe      Recipe[]
   Comments    Comments[]
+  UserRecipe  UserRecipe[]
+}
+
+model UserRecipe {
+  id       Int    @id @default(autoincrement())
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
+  recipeId Int
+  userId   Int
 }
 
 model Recipe {
@@ -29,6 +38,7 @@ model Recipe {
   userId      Int
   ingredient  RecipeIngredients[]
   popularity  Int                 @default(0)
+  UserRecipe  UserRecipe[]
 }
 
 model RecipeIngredients {
