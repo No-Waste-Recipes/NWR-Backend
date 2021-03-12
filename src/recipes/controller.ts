@@ -23,4 +23,12 @@ const CreateRecipe = async (req: Request, res: Response, next: NextFunction) => 
     })
 }
 
-export default {getRecipes, CreateRecipe, getPopularRecipes}
+const getRecipe = async (req: Request, res: Response, next: NextFunction) => {
+    const result = await recipe.getRecipe({slug: req.params.slug})
+
+    return res.status(200).json({
+        result
+    })
+}
+
+export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe}

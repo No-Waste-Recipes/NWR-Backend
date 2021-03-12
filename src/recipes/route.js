@@ -8,5 +8,6 @@ const router = express_1.default.Router();
 router.get('', controller_1.default.getRecipes);
 router.post('', controller_1.default.CreateRecipe);
 router.get('/popular', controller_1.default.getPopularRecipes);
+router.get('/:slug', controller_1.default.getRecipe);
 module.exports = router;
 //# sourceMappingURL=route.js.map
