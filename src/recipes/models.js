@@ -29,9 +29,18 @@ class RecipeModel {
                             username: true,
                         }
                     },
-                    ingredient: {
+                    ingredients: {
                         include: {
-                            ingredients: true
+                            ingredient: true
+                        }
+                    },
+                    comments: {
+                        include: {
+                            user: {
+                                select: {
+                                    username: true
+                                }
+                            }
                         }
                     }
                 }
@@ -85,6 +94,32 @@ class RecipeModel {
                     description,
                     userId: userId,
                 },
+            });
+        });
+    }
+    createComment({ slug, text, userId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const recipe = yield prisma.recipe.findUnique({
+                where: {
+                    slug: slug
+                },
+                select: {
+                    id: true
+                }
+            });
+            return yield prisma.comment.create({
+                data: {
+                    recipeId: recipe.id,
+                    userId: userId,
+                    text: text,
+                },
+                include: {
+                    user: {
+                        select: {
+                            username: true
+                        }
+                    }
+                }
             });
         });
     }

@@ -31,4 +31,12 @@ const getRecipe = async (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
-export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe}
+const createComment =  async (req: any, res: Response, next: NextFunction) => {
+    const comment = await recipe.createComment({slug: req.params.slug, text: req.body.text, userId: req.currentUser.id})
+
+    return res.status(200).json({
+        comment
+    })
+}
+
+export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment}

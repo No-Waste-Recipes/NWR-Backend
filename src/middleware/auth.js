@@ -31,9 +31,10 @@ const auth = () => {
                 const decoded = jwt.verify(token, secretKey);
                 req.currentUser = yield prisma.user.findUnique({
                     where: {
-                        id: decoded.user_id
+                        id: parseInt(decoded.user_id)
                     }
                 });
+                console.log(req.currentUser);
                 next();
             }
             catch (e) {
