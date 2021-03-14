@@ -27,5 +27,11 @@ const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         result
     });
 });
-exports.default = { getRecipes, CreateRecipe, getPopularRecipes };
+const getRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield recipe.getRecipe({ slug: req.params.slug });
+    return res.status(200).json({
+        result
+    });
+});
+exports.default = { getRecipes, CreateRecipe, getPopularRecipes, getRecipe };
 //# sourceMappingURL=controller.js.map

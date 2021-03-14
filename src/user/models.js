@@ -36,6 +36,18 @@ class UserModel {
             });
         });
     }
+    getFavoriteRecipes({ id }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.userRecipe.findMany({
+                where: {
+                    userId: id
+                },
+                include: {
+                    recipe: true
+                }
+            });
+        });
+    }
 }
 exports.UserModel = UserModel;
 //# sourceMappingURL=models.js.map

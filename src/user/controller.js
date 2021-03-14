@@ -51,5 +51,11 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     const { password } = user, userWithoutPassword = __rest(user, ["password"]);
     res.send({ user: Object.assign({}, userWithoutPassword), token });
 });
-exports.default = { creatUser, loginUser };
+const getFavoriteRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const recipes = yield userModel.getFavoriteRecipes({ id: req.currentUser.id });
+    return res.status(200).json({
+        recipes
+    });
+});
+exports.default = { creatUser, loginUser, getFavoriteRecipes };
 //# sourceMappingURL=controller.js.map
