@@ -22,7 +22,6 @@ class IngredientModel {
                     array.push(parseInt(id));
                 });
             }
-            console.log(name);
             return yield prisma.ingredient.findMany({
                 where: {
                     name: {

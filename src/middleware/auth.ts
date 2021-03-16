@@ -24,7 +24,6 @@ const auth = () => {
                     id: parseInt(decoded.user_id)
                 }
             });
-            console.log(req.currentUser)
             next();
 
         } catch (e) {
