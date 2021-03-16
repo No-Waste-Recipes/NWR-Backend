@@ -54,18 +54,19 @@ class RecipeModel {
                     AND: undefined
                 }
             };
+            console.log(ingredients);
             if (ingredients) {
                 const whereAnd = [];
                 if (ingredients.length > 1) {
                     ingredients.forEach((id) => {
                         whereAnd.push({
-                            ingredient: { some: { ingredientId: parseInt(id) } }
+                            ingredients: { some: { ingredientId: parseInt(id) } }
                         });
                     });
                 }
                 else {
                     whereAnd.push({
-                        ingredient: { some: { ingredientId: parseInt(ingredients) } }
+                        ingredients: { some: { ingredientId: parseInt(ingredients) } }
                     });
                 }
                 payload.where.AND = whereAnd;
