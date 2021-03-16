@@ -17,10 +17,10 @@ model User {
   description String?
   Recipe      Recipe[]
   Comments    Comment[]
-  UserRecipe  UserRecipe[]
+  Favorite    Favorite[]
 }
 
-model UserRecipe {
+model Favorite {
   id       Int    @id @default(autoincrement())
   recipe   Recipe @relation(fields: [recipeId], references: [id])
   user     User   @relation(fields: [userId], references: [id])
@@ -39,7 +39,7 @@ model Recipe {
   ingredients RecipeIngredients[]
   comments    Comment[]
   popularity  Int                 @default(0)
-  UserRecipe  UserRecipe[]
+  Favorite    Favorite[]
 }
 
 model RecipeIngredients {
