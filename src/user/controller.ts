@@ -47,4 +47,20 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
 
 }
 
-export default {creatUser, loginUser}
+const getFavoriteRecipes = async (req: any, res: Response, next: NextFunction) => {
+    const recipes = await userModel.getFavoriteRecipes({id: req.currentUser.id});
+
+    return res.status(200).json({
+        recipes
+    });
+}
+
+const setFavoriteRecipe = async (req: any, res: Response, next: NextFunction) => {
+    const recipes = await userModel.setFavoriteRecipe({userId: req.currentUser.id, recipeId: req.body.recipeId});
+
+    return res.status(200).json({
+        recipes
+    });
+}
+
+export default {creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe}

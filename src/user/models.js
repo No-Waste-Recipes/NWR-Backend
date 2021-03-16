@@ -36,6 +36,36 @@ class UserModel {
             });
         });
     }
+    getFavoriteRecipes({ id }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.favorite.findMany({
+                where: {
+                    userId: id
+                },
+                include: {
+                    recipe: true
+                }
+            });
+        });
+    }
+    setFavoriteRecipe({ userId, recipeId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let duplicateCheck = yield prisma.favorite.findMany({
+                where: {
+                    userId: userId,
+                    recipeId: recipeId
+                },
+            });
+            if (duplicateCheck.length == 0) {
+                return yield prisma.favorite.create({
+                    data: {
+                        recipeId,
+                        userId
+                    },
+                });
+            }
+        });
+    }
 }
 exports.UserModel = UserModel;
 //# sourceMappingURL=models.js.map

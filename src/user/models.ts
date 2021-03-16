@@ -23,4 +23,33 @@ export class UserModel {
             }
         })
     }
+
+    async getFavoriteRecipes({ id }) {
+        return await prisma.favorite.findMany({
+            where: {
+                userId: id
+            },
+            include: {
+                recipe: true
+            }
+        })
+    }
+
+    async setFavoriteRecipe({ userId, recipeId }) {
+        let duplicateCheck = await prisma.favorite.findMany({
+            where: {
+                userId: userId,
+                recipeId: recipeId
+            },
+        });
+
+        if (duplicateCheck.length == 0) {
+            return await prisma.favorite.create({
+                data: {
+                    recipeId,
+                    userId
+                },
+            })
+        }
+    }
 }
