@@ -9,5 +9,6 @@ const router = express_1.default.Router();
 router.post('/register', controller_1.default.creatUser);
 router.post('/login', controller_1.default.loginUser);
 router.get('/favorites', auth(), controller_1.default.getFavoriteRecipes);
+router.post('/favorites', auth(), controller_1.default.setFavoriteRecipe);
 module.exports = router;
 //# sourceMappingURL=route.js.map

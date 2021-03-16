@@ -57,5 +57,11 @@ const getFavoriteRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0,
         recipes
     });
 });
-exports.default = { creatUser, loginUser, getFavoriteRecipes };
+const setFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const recipes = yield userModel.setFavoriteRecipe({ userId: req.currentUser.id, recipeId: req.body.recipeId });
+    return res.status(200).json({
+        recipes
+    });
+});
+exports.default = { creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe };
 //# sourceMappingURL=controller.js.map

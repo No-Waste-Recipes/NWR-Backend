@@ -1,4 +1,5 @@
 import {PrismaClient} from "@prisma/client";
+import slugify from "slugify";
 const prisma = new PrismaClient()
 
 export class UserModel {
@@ -33,5 +34,23 @@ export class UserModel {
                 recipe: true
             }
         })
+    }
+
+    async setFavoriteRecipe({ userId, recipeId }) {
+        let duplicateCheck = await prisma.userRecipe.findMany({
+            where: {
+                userId: userId,
+                recipeId: recipeId
+            },
+        });
+
+        if (duplicateCheck.length == 0) {
+            return await prisma.userRecipe.create({
+                data: {
+                    recipeId,
+                    userId
+                },
+            })
+        }
     }
 }
