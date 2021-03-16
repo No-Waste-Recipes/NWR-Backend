@@ -50,13 +50,13 @@ class UserModel {
     }
     setFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            let joe = yield prisma.userRecipe.findMany({
+            let duplicateCheck = yield prisma.userRecipe.findMany({
                 where: {
                     userId: userId,
                     recipeId: recipeId
                 },
             });
-            if (joe.length == 0) {
+            if (duplicateCheck.length == 0) {
                 return yield prisma.userRecipe.create({
                     data: {
                         recipeId,

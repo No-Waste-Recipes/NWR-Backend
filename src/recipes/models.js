@@ -29,9 +29,18 @@ class RecipeModel {
                             username: true,
                         }
                     },
-                    ingredient: {
+                    ingredients: {
                         include: {
-                            ingredients: true
+                            ingredient: true
+                        }
+                    },
+                    comments: {
+                        include: {
+                            user: {
+                                select: {
+                                    username: true
+                                }
+                            }
                         }
                     }
                 }
@@ -40,6 +49,7 @@ class RecipeModel {
     }
     getRecipes({ ingredients }) {
         return __awaiter(this, void 0, void 0, function* () {
+            let ingredientListInt = [];
             const payload = {
                 where: {
                     AND: undefined
@@ -47,21 +57,31 @@ class RecipeModel {
             };
             if (ingredients) {
                 const whereAnd = [];
-                if (ingredients.length > 1) {
+                if (Array.isArray(ingredients) && ingredients.length > 1) {
                     ingredients.forEach((id) => {
                         whereAnd.push({
-                            ingredient: { some: { ingredientId: parseInt(id) } }
+                            ingredients: { some: { ingredientId: parseInt(id) } }
                         });
+                        ingredientListInt.push(parseInt(id));
                     });
                 }
                 else {
                     whereAnd.push({
-                        ingredient: { some: { ingredientId: parseInt(ingredients) } }
+                        ingredients: { some: { ingredientId: parseInt(ingredients) } }
                     });
+                    ingredientListInt.push(parseInt(ingredients));
                 }
                 payload.where.AND = whereAnd;
+                let ingredientsList = yield prisma.ingredient.findMany({
+                    where: {
+                        id: {
+                            in: ingredientListInt
+                        }
+                    }
+                });
+                return { 'ingredients': ingredientsList, 'recipes': yield prisma.recipe.findMany(payload) };
             }
-            return yield prisma.recipe.findMany(payload);
+            return { 'recipes': yield prisma.recipe.findMany() };
         });
     }
     getPopularRecipes() {
@@ -85,6 +105,32 @@ class RecipeModel {
                     description,
                     userId: userId,
                 },
+            });
+        });
+    }
+    createComment({ slug, text, userId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const recipe = yield prisma.recipe.findUnique({
+                where: {
+                    slug: slug
+                },
+                select: {
+                    id: true
+                }
+            });
+            return yield prisma.comment.create({
+                data: {
+                    recipeId: recipe.id,
+                    userId: userId,
+                    text: text,
+                },
+                include: {
+                    user: {
+                        select: {
+                            username: true
+                        }
+                    }
+                }
             });
         });
     }

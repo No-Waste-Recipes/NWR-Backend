@@ -15,9 +15,18 @@ export class RecipeModel {
                         username: true,
                     }
                 },
-                ingredient: {
+                ingredients: {
                     include: {
-                        ingredients: true
+                        ingredient: true
+                    }
+                },
+                comments: {
+                    include: {
+                        user: {
+                            select: {
+                                username: true
+                            }
+                        }
                     }
                 }
             }
@@ -25,6 +34,7 @@ export class RecipeModel {
     }
 
     async getRecipes({ingredients}) {
+        let ingredientListInt = []
         const payload = {
             where: {
                 AND: undefined
@@ -32,20 +42,34 @@ export class RecipeModel {
         }
         if(ingredients) {
             const whereAnd = []
-            if (ingredients.length > 1) {
+            if (Array.isArray(ingredients) && ingredients.length > 1) {
                 ingredients.forEach((id) => {
                     whereAnd.push({
-                        ingredient: { some: { ingredientId: parseInt(id)}}
+                        ingredients: { some: { ingredientId: parseInt(id)}}
                     })
+                    ingredientListInt.push(parseInt(id))
                 })
             } else {
                 whereAnd.push({
-                    ingredient: { some: { ingredientId: parseInt(ingredients)}}
+                    ingredients: { some: { ingredientId: parseInt(ingredients)}}
                 })
+                ingredientListInt.push(parseInt(ingredients))
             }
             payload.where.AND = whereAnd
+
+            let ingredientsList = await prisma.ingredient.findMany({
+                where: {
+                    id: {
+                        in: ingredientListInt
+                    }
+                }
+            })
+
+            return {'ingredients': ingredientsList, 'recipes': await prisma.recipe.findMany(payload) }
         }
-        return await prisma.recipe.findMany(payload)
+        return {'recipes': await prisma.recipe.findMany() }
+
+
 
     }
 
@@ -70,5 +94,33 @@ export class RecipeModel {
             },
         })
     }
+
+    async createComment({slug, text, userId}) {
+        const recipe = await prisma.recipe.findUnique({
+            where: {
+                slug: slug
+            },
+            select: {
+                id: true
+            }
+        })
+
+        return await prisma.comment.create({
+            data: {
+                recipeId: recipe.id,
+                userId: userId,
+                text: text,
+            },
+            include: {
+                user: {
+                    select: {
+                        username: true
+                    }
+                }
+            }
+        })
+
+    }
+
 
 }
