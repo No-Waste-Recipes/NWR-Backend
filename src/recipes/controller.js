@@ -13,7 +13,7 @@ const models_1 = require("./models");
 const recipe = new models_1.RecipeModel();
 const getRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield recipe.getRecipes({ ingredients: req.query.ingredient });
-    return res.status(200).json({ recipes });
+    return res.status(200).json(recipes);
 });
 const getPopularRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield recipe.getPopularRecipes();

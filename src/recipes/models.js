@@ -49,29 +49,39 @@ class RecipeModel {
     }
     getRecipes({ ingredients }) {
         return __awaiter(this, void 0, void 0, function* () {
+            let ingredientListInt = [];
             const payload = {
                 where: {
                     AND: undefined
                 }
             };
-            console.log(ingredients);
             if (ingredients) {
                 const whereAnd = [];
-                if (ingredients.length > 1) {
+                if (Array.isArray(ingredients) && ingredients.length > 1) {
                     ingredients.forEach((id) => {
                         whereAnd.push({
                             ingredients: { some: { ingredientId: parseInt(id) } }
                         });
+                        ingredientListInt.push(parseInt(id));
                     });
                 }
                 else {
                     whereAnd.push({
                         ingredients: { some: { ingredientId: parseInt(ingredients) } }
                     });
+                    ingredientListInt.push(parseInt(ingredients));
                 }
                 payload.where.AND = whereAnd;
+                let ingredientsList = yield prisma.ingredient.findMany({
+                    where: {
+                        id: {
+                            in: ingredientListInt
+                        }
+                    }
+                });
+                return { 'ingredients': ingredientsList, 'recipes': yield prisma.recipe.findMany(payload) };
             }
-            return yield prisma.recipe.findMany(payload);
+            return { 'recipes': yield prisma.recipe.findMany() };
         });
     }
     getPopularRecipes() {

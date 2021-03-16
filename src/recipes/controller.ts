@@ -4,7 +4,7 @@ const recipe = new RecipeModel()
 
 const getRecipes = async (req: Request, res: Response, next: NextFunction) => {
     const recipes = await recipe.getRecipes({ingredients: req.query.ingredient});
-    return res.status(200).json({recipes})
+    return res.status(200).json(recipes)
 }
 
 const getPopularRecipes = async (req: Request, res: Response, next: NextFunction) => {
