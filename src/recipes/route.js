@@ -4,10 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const express_1 = __importDefault(require("express"));
 const controller_1 = __importDefault(require("./controller"));
+const auth = require('../middleware/auth');
 const router = express_1.default.Router();
 router.get('', controller_1.default.getRecipes);
 router.post('', controller_1.default.CreateRecipe);
 router.get('/popular', controller_1.default.getPopularRecipes);
 router.get('/:slug', controller_1.default.getRecipe);
+router.post('/:slug/comment', auth(), controller_1.default.createComment);
 module.exports = router;
 //# sourceMappingURL=route.js.map

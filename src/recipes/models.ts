@@ -15,9 +15,18 @@ export class RecipeModel {
                         username: true,
                     }
                 },
-                ingredient: {
+                ingredients: {
                     include: {
-                        ingredients: true
+                        ingredient: true
+                    }
+                },
+                comments: {
+                    include: {
+                        user: {
+                            select: {
+                                username: true
+                            }
+                        }
                     }
                 }
             }
@@ -35,12 +44,12 @@ export class RecipeModel {
             if (ingredients.length > 1) {
                 ingredients.forEach((id) => {
                     whereAnd.push({
-                        ingredient: { some: { ingredientId: parseInt(id)}}
+                        ingredients: { some: { ingredientId: parseInt(id)}}
                     })
                 })
             } else {
                 whereAnd.push({
-                    ingredient: { some: { ingredientId: parseInt(ingredients)}}
+                    ingredients: { some: { ingredientId: parseInt(ingredients)}}
                 })
             }
             payload.where.AND = whereAnd
@@ -70,5 +79,33 @@ export class RecipeModel {
             },
         })
     }
+
+    async createComment({slug, text, userId}) {
+        const recipe = await prisma.recipe.findUnique({
+            where: {
+                slug: slug
+            },
+            select: {
+                id: true
+            }
+        })
+
+        return await prisma.comment.create({
+            data: {
+                recipeId: recipe.id,
+                userId: userId,
+                text: text,
+            },
+            include: {
+                user: {
+                    select: {
+                        username: true
+                    }
+                }
+            }
+        })
+
+    }
+
 
 }

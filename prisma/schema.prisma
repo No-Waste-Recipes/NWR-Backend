@@ -16,7 +16,7 @@ model User {
   last_name   String
   description String?
   Recipe      Recipe[]
-  Comments    Comments[]
+  Comments    Comment[]
 }
 
 model Recipe {
@@ -27,14 +27,15 @@ model Recipe {
   user        User                @relation(fields: [userId], references: [id])
   status      Status              @default(TO_BE_APPROVED)
   userId      Int
-  ingredient  RecipeIngredients[]
+  ingredients RecipeIngredients[]
+  comments    Comment[]
   popularity  Int                 @default(0)
 }
 
 model RecipeIngredients {
   id           Int        @id @default(autoincrement())
   recipe       Recipe     @relation(fields: [recipeId], references: [id])
-  ingredients  Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
   recipeId     Int
   ingredientId Int
 }
@@ -65,9 +66,11 @@ model Category {
   description String
 }
 
-model Comments {
-  id     Int    @id @default(autoincrement())
-  text   String
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int
+model Comment {
+  id       Int    @id @default(autoincrement())
+  text     String
+  user     User   @relation(fields: [userId], references: [id])
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  userId   Int
+  recipeId Int
 }
