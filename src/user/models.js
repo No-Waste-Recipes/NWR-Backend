@@ -22,7 +22,7 @@ class UserModel {
                     password,
                     first_name,
                     last_name,
-                    description
+                    description,
                 },
             });
         });
@@ -31,36 +31,41 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.user.findUnique({
                 where: {
-                    email
-                }
+                    email,
+                },
             });
+        });
+    }
+    getUser({ id }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.findFirst({ where: { id } });
         });
     }
     getFavoriteRecipes({ id }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.favorite.findMany({
                 where: {
-                    userId: id
+                    userId: id,
                 },
                 include: {
-                    recipe: true
-                }
+                    recipe: true,
+                },
             });
         });
     }
     setFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            let duplicateCheck = yield prisma.favorite.findMany({
+            const duplicateCheck = yield prisma.favorite.findMany({
                 where: {
-                    userId: userId,
-                    recipeId: recipeId
+                    userId,
+                    recipeId,
                 },
             });
-            if (duplicateCheck.length == 0) {
+            if (duplicateCheck.length === 0) {
                 return yield prisma.favorite.create({
                     data: {
                         recipeId,
-                        userId
+                        userId,
                     },
                 });
             }
@@ -70,9 +75,9 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.favorite.deleteMany({
                 where: {
-                    userId: userId,
-                    recipeId: recipeId
-                }
+                    userId,
+                    recipeId,
+                },
             });
         });
     }
