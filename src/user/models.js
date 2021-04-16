@@ -27,12 +27,31 @@ class UserModel {
             });
         });
     }
+    updateUser(userId, { email, username, first_name, last_name, description }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.update({
+                where: { id: parseInt(userId) },
+                data: {
+                    email,
+                    username,
+                    first_name,
+                    last_name,
+                    description,
+                }
+            });
+        });
+    }
+    deleteUser({ id }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.delete({ where: { id } });
+        });
+    }
     loginUser({ email, password: pass }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.user.findUnique({
                 where: {
                     email,
-                },
+                }
             });
         });
     }

@@ -16,6 +16,23 @@ export class UserModel {
         });
     }
 
+    public async updateUser(userId,{email,username,first_name,last_name,description}){
+        return await prisma.user.update({
+            where: { id: parseInt(userId) },
+            data:{
+                email,
+                username,
+                first_name,
+                last_name,
+                description,
+            }
+        })
+    }
+
+    public async deleteUser({id}) {
+        return await prisma.user.delete( {where: { id }} );
+    }
+
     public async loginUser({ email, password: pass}) {
         return await prisma.user.findUnique({
             where: {

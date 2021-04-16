@@ -34,6 +34,16 @@ const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
         req.body.password = yield bcrypt.hash(req.body.password, 8);
     }
 });
+const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel.updateUser(req.currentUser.id, Object.assign({}, req.body));
+    return res.status(200).json({ user, });
+});
+const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel.deleteUser({ id: req.currentUser.id });
+    return res.status(200).json({
+        user,
+    });
+});
 const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password: pass } = req.body;
     const user = yield userModel.loginUser(req.body);
@@ -75,5 +85,5 @@ const deleteFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 
         recipes,
     });
 });
-exports.default = { creatUser, loginUser, getUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe };
+exports.default = { creatUser, updateUser, deleteUser, loginUser, getUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe };
 //# sourceMappingURL=controller.js.map

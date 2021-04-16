@@ -1,4 +1,5 @@
 import {NextFunction, Request, Response} from "express";
+import {body} from "express-validator";
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -19,6 +20,19 @@ const hashPassword = async (req) => {
     if (req.body.password) {
         req.body.password = await bcrypt.hash(req.body.password, 8);
     }
+};
+
+const updateUser= async (req: any, res: Response, next: NextFunction)=>{
+    const user = await userModel.updateUser(req.currentUser.id, {...req.body});
+    return res.status(200).json({user,});
+};
+
+const deleteUser =async (req: any, res: Response, next: NextFunction) => {
+    const user = await userModel.deleteUser({id: req.currentUser.id});
+
+    return res.status(200).json({
+        user,
+    });
 };
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -79,4 +93,4 @@ const deleteFavoriteRecipe = async (req: any, res: Response, next: NextFunction)
     });
 };
 
-export default {creatUser, loginUser, getUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe};
+export default {creatUser, updateUser, deleteUser ,loginUser, getUser,  getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe};
