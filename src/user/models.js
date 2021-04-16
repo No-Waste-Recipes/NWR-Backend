@@ -66,6 +66,16 @@ class UserModel {
             }
         });
     }
+    deleteFavoriteRecipe({ userId, recipeId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.favorite.deleteMany({
+                where: {
+                    userId: userId,
+                    recipeId: recipeId
+                }
+            });
+        });
+    }
 }
 exports.UserModel = UserModel;
 //# sourceMappingURL=models.js.map

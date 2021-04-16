@@ -52,4 +52,13 @@ export class UserModel {
             })
         }
     }
+
+    async deleteFavoriteRecipe({ userId, recipeId }) {
+        return await prisma.favorite.deleteMany({
+            where: {
+                userId: userId,
+                recipeId: recipeId
+            }
+        })
+    }
 }
