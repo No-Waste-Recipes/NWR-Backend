@@ -57,6 +57,7 @@ class UserModel {
                 },
             });
             if (duplicateCheck.length == 0) {
+                console.log('added fav');
                 return yield prisma.favorite.create({
                     data: {
                         recipeId,
@@ -64,10 +65,14 @@ class UserModel {
                     },
                 });
             }
+            else {
+                yield this.deleteFavoriteRecipe({ userId, recipeId });
+            }
         });
     }
     deleteFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('deleted fav');
             return yield prisma.favorite.deleteMany({
                 where: {
                     userId: userId,

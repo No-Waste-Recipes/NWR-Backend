@@ -50,6 +50,8 @@ export class UserModel {
                     userId
                 },
             })
+        } else {
+            await this.deleteFavoriteRecipe({userId, recipeId})
         }
     }
 
