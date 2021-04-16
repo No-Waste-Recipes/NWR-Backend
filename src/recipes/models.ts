@@ -13,6 +13,7 @@ export class RecipeModel {
                 user: {
                     select: {
                         username: true,
+                        id: true
                     }
                 },
                 ingredients: {
@@ -24,7 +25,8 @@ export class RecipeModel {
                     include: {
                         user: {
                             select: {
-                                username: true
+                                username: true,
+                                id: true
                             }
                         }
                     }
@@ -93,6 +95,44 @@ export class RecipeModel {
                 userId: userId,
             },
         })
+    }
+
+    async approveRecipes() {
+        return await prisma.recipe.findMany({
+            where: {
+                status: "TO_BE_APPROVED"
+            }
+        })
+    }
+
+    async approveRecipe(slug: string, status) {
+        return await prisma.recipe.update({
+            where: {
+                slug: slug
+            },
+            data: {
+                status: status
+            }
+        })
+    }
+
+    async deleteComment({commentId, userId}) {
+        const comment = await prisma.comment.findUnique({
+            where: {
+                id: parseInt(commentId)
+            }
+        })
+
+        if (comment.userId == userId) {
+            return await prisma.comment.delete({
+                where: {
+                    id: parseInt(commentId)
+                }
+            })
+        } else {
+            console.log("No rights")
+        }
+
     }
 
     async createComment({slug, text, userId}) {

@@ -9,7 +9,10 @@ const router = express_1.default.Router();
 router.get('', controller_1.default.getRecipes);
 router.post('', controller_1.default.CreateRecipe);
 router.get('/popular', controller_1.default.getPopularRecipes);
+router.get('/approve', auth(), controller_1.default.getApproveRecipes);
+router.post('/approve/:slug', auth(), controller_1.default.approveRecipe);
 router.get('/:slug', controller_1.default.getRecipe);
 router.post('/:slug/comment', auth(), controller_1.default.createComment);
+router.delete('/:slug/comment/:id', auth(), controller_1.default.deleteComment);
 module.exports = router;
 //# sourceMappingURL=route.js.map
