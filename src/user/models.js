@@ -57,7 +57,6 @@ class UserModel {
                 },
             });
             if (duplicateCheck.length == 0) {
-                console.log('added fav');
                 return yield prisma.favorite.create({
                     data: {
                         recipeId,
@@ -72,12 +71,21 @@ class UserModel {
     }
     deleteFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('deleted fav');
             return yield prisma.favorite.deleteMany({
                 where: {
                     userId: userId,
                     recipeId: recipeId
                 }
+            });
+        });
+    }
+    findFavoriteRecipes({ userId, recipeId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.favorite.findMany({
+                where: {
+                    userId: userId,
+                    recipeId: parseInt(recipeId)
+                },
             });
         });
     }

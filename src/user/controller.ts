@@ -71,4 +71,12 @@ const deleteFavoriteRecipe = async (req: any, res: Response, next: NextFunction)
     });
 }
 
-export default {creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe}
+const findFavoriteRecipe = async (req: any, res: Response, next: NextFunction) => {
+    const recipes = await userModel.findFavoriteRecipes({userId: req.currentUser.id, recipeId: req.params.id})
+
+    return res.status(200).json({
+        recipes
+    });
+}
+
+export default {creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe}

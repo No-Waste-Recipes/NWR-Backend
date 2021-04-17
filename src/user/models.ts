@@ -63,4 +63,13 @@ export class UserModel {
             }
         })
     }
+
+    async findFavoriteRecipes({userId, recipeId}) {
+        return await prisma.favorite.findMany({
+            where: {
+                userId: userId,
+                recipeId: parseInt(recipeId)
+            },
+        });
+    }
 }
