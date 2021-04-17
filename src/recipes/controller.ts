@@ -31,6 +31,14 @@ const getRecipe = async (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
+const deleteRecipe = async (req: any, res: Response, next: NextFunction) => {
+    const result = await recipe.deleteRecipe({recipeId: req.params.id, user: req.currentUser})
+
+    return res.status(200).json({
+        result
+    })
+}
+
 const createComment =  async (req: any, res: Response, next: NextFunction) => {
     const comment = await recipe.createComment({slug: req.params.slug, text: req.body.text, userId: req.currentUser.id})
 
@@ -40,7 +48,7 @@ const createComment =  async (req: any, res: Response, next: NextFunction) => {
 }
 
 const deleteComment = async (req: any, res: Response, next: NextFunction) => {
-    const deleteComment = await recipe.deleteComment({commentId: req.params.id, userId: req.currentUser.id})
+    const deleteComment = await recipe.deleteComment({commentId: req.params.id, user: req.currentUser})
 
     return res.status(200).json({
         deleteComment
@@ -63,4 +71,4 @@ const approveRecipe = async (req: any, res: Response, next: NextFunction) => {
     })
 }
 
-export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment}
+export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe}

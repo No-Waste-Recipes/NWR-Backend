@@ -131,15 +131,38 @@ class RecipeModel {
             });
         });
     }
-    deleteComment({ commentId, userId }) {
+    deleteRecipe({ recipeId, user }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const recipe = yield prisma.recipe.findUnique({
+                where: {
+                    id: parseInt(recipeId)
+                }
+            });
+            if (recipe.userId == user.id || user.role == "ADMIN") {
+                yield prisma.comment.deleteMany({
+                    where: {
+                        recipeId: parseInt(recipeId)
+                    }
+                });
+                return yield prisma.recipe.delete({
+                    where: {
+                        id: parseInt(recipeId)
+                    }
+                });
+            }
+            else {
+                console.log("No rights");
+            }
+        });
+    }
+    deleteComment({ commentId, user }) {
         return __awaiter(this, void 0, void 0, function* () {
             const comment = yield prisma.comment.findUnique({
                 where: {
                     id: parseInt(commentId)
                 }
             });
-            if (comment.userId == userId) {
-                console.log("Succesfully deleted");
+            if (comment.userId == user.id || user.role == "ADMIN") {
                 return yield prisma.comment.delete({
                     where: {
                         id: parseInt(commentId)

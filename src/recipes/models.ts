@@ -116,14 +116,37 @@ export class RecipeModel {
         })
     }
 
-    async deleteComment({commentId, userId}) {
+    async deleteRecipe({recipeId, user}) {
+        const recipe = await prisma.recipe.findUnique({
+            where: {
+                id: parseInt(recipeId)
+            }
+        })
+
+        if (recipe.userId == user.id || user.role == "ADMIN") {
+            await  prisma.comment.deleteMany({
+                where: {
+                    recipeId: parseInt(recipeId)
+                }
+            })
+            return await prisma.recipe.delete({
+                where: {
+                    id: parseInt(recipeId)
+                }
+            })
+        } else {
+            console.log("No rights")
+        }
+    }
+
+    async deleteComment({commentId, user}) {
         const comment = await prisma.comment.findUnique({
             where: {
                 id: parseInt(commentId)
             }
         })
 
-        if (comment.userId == userId) {
+        if (comment.userId == user.id || user.role == "ADMIN") {
             return await prisma.comment.delete({
                 where: {
                     id: parseInt(commentId)

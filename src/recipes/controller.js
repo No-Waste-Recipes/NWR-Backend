@@ -33,6 +33,12 @@ const getRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         result
     });
 });
+const deleteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield recipe.deleteRecipe({ recipeId: req.params.id, user: req.currentUser });
+    return res.status(200).json({
+        result
+    });
+});
 const createComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const comment = yield recipe.createComment({ slug: req.params.slug, text: req.body.text, userId: req.currentUser.id });
     return res.status(200).json({
@@ -40,7 +46,7 @@ const createComment = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     });
 });
 const deleteComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const deleteComment = yield recipe.deleteComment({ commentId: req.params.id, userId: req.currentUser.id });
+    const deleteComment = yield recipe.deleteComment({ commentId: req.params.id, user: req.currentUser });
     return res.status(200).json({
         deleteComment
     });
@@ -57,5 +63,5 @@ const approveRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         result
     });
 });
-exports.default = { getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment };
+exports.default = { getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe };
 //# sourceMappingURL=controller.js.map
