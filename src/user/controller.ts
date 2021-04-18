@@ -72,7 +72,7 @@ const deleteFavoriteRecipe = async (req: any, res: Response, next: NextFunction)
 }
 
 const findFavoriteRecipe = async (req: any, res: Response, next: NextFunction) => {
-    const recipes = await userModel.findFavoriteRecipes({userId: req.currentUser.id, recipeId: req.params.id})
+    const recipes = await userModel.findFavoriteRecipe({userId: req.currentUser.id, recipeId: req.params.id})
 
     return res.status(200).json({
         recipes

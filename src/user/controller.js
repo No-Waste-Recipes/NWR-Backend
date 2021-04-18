@@ -70,7 +70,7 @@ const deleteFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 
     });
 });
 const findFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const recipes = yield userModel.findFavoriteRecipes({ userId: req.currentUser.id, recipeId: req.params.id });
+    const recipes = yield userModel.findFavoriteRecipe({ userId: req.currentUser.id, recipeId: req.params.id });
     return res.status(200).json({
         recipes
     });

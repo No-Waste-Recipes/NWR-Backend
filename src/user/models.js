@@ -79,7 +79,7 @@ class UserModel {
             });
         });
     }
-    findFavoriteRecipes({ userId, recipeId }) {
+    findFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.favorite.findMany({
                 where: {
