@@ -28,16 +28,16 @@ const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     });
 });
 const getRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield recipe.getRecipe({ slug: req.params.slug })
-        .catch(() => {
-        return res.status(401).json();
-    });
+    const result = yield recipe.getRecipe({ slug: req.params.slug });
     return res.status(200).json({
         result
     });
 });
 const deleteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield recipe.deleteRecipe({ recipeId: req.params.id, user: req.currentUser });
+    const result = yield recipe.deleteRecipe({ recipeId: req.params.id, user: req.currentUser })
+        .catch(() => {
+        return res.status(401).json();
+    });
     return res.status(200).json({
         result
     });
@@ -49,7 +49,10 @@ const createComment = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     });
 });
 const deleteComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const deleteComment = yield recipe.deleteComment({ commentId: req.params.id, user: req.currentUser });
+    const deleteComment = yield recipe.deleteComment({ commentId: req.params.id, user: req.currentUser })
+        .catch(() => {
+        return res.status(401).json();
+    });
     return res.status(200).json({
         deleteComment
     });

@@ -54,7 +54,14 @@ class RecipeModel {
             let ingredientListInt = [];
             const payload = {
                 where: {
-                    AND: undefined
+                    OR: undefined
+                },
+                include: {
+                    ingredients: {
+                        include: {
+                            ingredient: true
+                        }
+                    },
                 }
             };
             if (ingredients) {
@@ -73,7 +80,7 @@ class RecipeModel {
                     });
                     ingredientListInt.push(parseInt(ingredients));
                 }
-                payload.where.AND = whereAnd;
+                payload.where.OR = whereAnd;
                 let ingredientsList = yield prisma.ingredient.findMany({
                     where: {
                         id: {
@@ -167,9 +174,7 @@ class RecipeModel {
                     }
                 });
             }
-            else {
-                console.log("No rights");
-            }
+            throw new Error();
         });
     }
     createComment({ slug, text, userId }) {

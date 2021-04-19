@@ -39,7 +39,14 @@ export class RecipeModel {
         let ingredientListInt = []
         const payload = {
             where: {
-                AND: undefined
+                OR: undefined
+            },
+            include: {
+                ingredients: {
+                    include: {
+                        ingredient: true
+                    }
+                },
             }
         }
         if(ingredients) {
@@ -57,7 +64,7 @@ export class RecipeModel {
                 })
                 ingredientListInt.push(parseInt(ingredients))
             }
-            payload.where.AND = whereAnd
+            payload.where.OR = whereAnd
 
             let ingredientsList = await prisma.ingredient.findMany({
                 where: {
