@@ -64,6 +64,9 @@ class UserModel {
                     },
                 });
             }
+            else {
+                yield this.deleteFavoriteRecipe({ userId, recipeId });
+            }
         });
     }
     deleteFavoriteRecipe({ userId, recipeId }) {
@@ -73,6 +76,16 @@ class UserModel {
                     userId: userId,
                     recipeId: recipeId
                 }
+            });
+        });
+    }
+    findFavoriteRecipe({ userId, recipeId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.favorite.findMany({
+                where: {
+                    userId: userId,
+                    recipeId: parseInt(recipeId)
+                },
             });
         });
     }

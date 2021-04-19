@@ -11,5 +11,6 @@ router.post('/login', controller_1.default.loginUser);
 router.get('/favorites', auth(), controller_1.default.getFavoriteRecipes);
 router.post('/favorites', auth(), controller_1.default.setFavoriteRecipe);
 router.delete('/favorites', auth(), controller_1.default.deleteFavoriteRecipe);
+router.get('/favorites/:id', auth(), controller_1.default.findFavoriteRecipe);
 module.exports = router;
 //# sourceMappingURL=route.js.map
