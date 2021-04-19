@@ -167,9 +167,7 @@ class RecipeModel {
                     }
                 });
             }
-            else {
-                console.log("No rights");
-            }
+            throw new Error();
         });
     }
     createComment({ slug, text, userId }) {

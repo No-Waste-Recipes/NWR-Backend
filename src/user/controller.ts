@@ -1,10 +1,11 @@
 import {NextFunction, Request, Response} from "express";
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-import {UserModel} from './models'
-const userModel = new UserModel()
+import {body} from "express-validator";
 
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+import {UserModel} from "./models";
 
+const userModel = new UserModel();
 
 const creatUser = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -19,7 +20,20 @@ const hashPassword = async (req) => {
     if (req.body.password) {
         req.body.password = await bcrypt.hash(req.body.password, 8);
     }
-}
+};
+
+const updateUser= async (req: any, res: Response, next: NextFunction)=>{
+    const user = await userModel.updateUser(req.currentUser.id, {...req.body});
+    return res.status(200).json({user,});
+};
+
+const deleteUser =async (req: any, res: Response, next: NextFunction) => {
+    const user = await userModel.deleteUser({id: req.currentUser.id});
+
+    return res.status(200).json({
+        user,
+    });
+};
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password: pass} = req.body
@@ -45,7 +59,15 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
 
     res.send({ user: {...userWithoutPassword}, token });
 
-}
+};
+
+const getUser = async (req: any, res: Response, next: NextFunction) => {
+    const user = await userModel.getUser({id: req.currentUser.id});
+
+    return res.status(200).json({
+        user,
+    });
+};
 
 const getFavoriteRecipes = async (req: any, res: Response, next: NextFunction) => {
     const recipes = await userModel.getFavoriteRecipes({id: req.currentUser.id});
@@ -79,4 +101,4 @@ const findFavoriteRecipe = async (req: any, res: Response, next: NextFunction) =
     });
 }
 
-export default {creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe}
+export default {creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser}

@@ -3,25 +3,46 @@ const prisma = new PrismaClient()
 
 export class UserModel {
 
-    async createUser({ email, username, password, firstName, lastName, description }){
+    public async createUser({ email, username, password, first_name, last_name, description }) {
         return await prisma.user.create({
             data: {
                 email,
                 username,
                 password,
-                first_name: firstName,
-                last_name: lastName,
-                description
+                first_name,
+                last_name,
+                description,
             },
+        });
+    }
+
+    public async updateUser(userId,{email,username,first_name,last_name,description}){
+        return await prisma.user.update({
+            where: { id: parseInt(userId) },
+            data:{
+                email,
+                username,
+                first_name,
+                last_name,
+                description,
+            }
         })
     }
 
-    async loginUser({ email, password: pass}) {
+    public async deleteUser({id}) {
+        return await prisma.user.delete( {where: { id }} );
+    }
+
+    public async loginUser({ email, password: pass}) {
         return await prisma.user.findUnique({
             where: {
                 email
             }
         })
+    }
+
+    public async getUser({id}) {
+        return await prisma.user.findFirst( {where: { id}} );
     }
 
     async getFavoriteRecipes({ id }) {
