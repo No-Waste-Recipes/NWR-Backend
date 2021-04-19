@@ -13,6 +13,7 @@ export class RecipeModel {
                 user: {
                     select: {
                         username: true,
+                        id: true
                     }
                 },
                 ingredients: {
@@ -24,7 +25,8 @@ export class RecipeModel {
                     include: {
                         user: {
                             select: {
-                                username: true
+                                username: true,
+                                id: true
                             }
                         }
                     }
@@ -93,6 +95,64 @@ export class RecipeModel {
                 userId: userId,
             },
         })
+    }
+
+    async approveRecipes() {
+        return await prisma.recipe.findMany({
+            where: {
+                status: "TO_BE_APPROVED"
+            }
+        })
+    }
+
+    async approveRecipe(slug: string, status) {
+        return await prisma.recipe.update({
+            where: {
+                slug: slug
+            },
+            data: {
+                status: status
+            }
+        })
+    }
+
+    async deleteRecipe({recipeId, user}) {
+        const recipe = await prisma.recipe.findUnique({
+            where: {
+                id: parseInt(recipeId)
+            }
+        })
+
+        if (recipe.userId == user.id || user.role == "ADMIN") {
+            await  prisma.comment.deleteMany({
+                where: {
+                    recipeId: parseInt(recipeId)
+                }
+            })
+            return await prisma.recipe.delete({
+                where: {
+                    id: parseInt(recipeId)
+                }
+            })
+        }
+        throw new Error()
+    }
+
+    async deleteComment({commentId, user}) {
+        const comment = await prisma.comment.findUnique({
+            where: {
+                id: parseInt(commentId)
+            }
+        })
+
+        if (comment.userId == user.id || user.role == "ADMIN") {
+            return await prisma.comment.delete({
+                where: {
+                    id: parseInt(commentId)
+                }
+            })
+        }
+        throw new Error()
     }
 
     async createComment({slug, text, userId}) {

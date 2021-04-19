@@ -13,15 +13,15 @@ exports.UserModel = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 class UserModel {
-    createUser({ email, username, password, first_name, last_name, description }) {
+    createUser({ email, username, password, firstName, lastName, description }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.user.create({
                 data: {
                     email,
                     username,
                     password,
-                    first_name,
-                    last_name,
+                    first_name: firstName,
+                    last_name: lastName,
                     description
                 },
             });

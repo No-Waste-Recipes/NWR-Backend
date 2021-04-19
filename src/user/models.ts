@@ -3,14 +3,14 @@ const prisma = new PrismaClient()
 
 export class UserModel {
 
-    async createUser({ email, username, password, first_name, last_name, description }){
+    async createUser({ email, username, password, firstName, lastName, description }){
         return await prisma.user.create({
             data: {
                 email,
                 username,
                 password,
-                first_name,
-                last_name,
+                first_name: firstName,
+                last_name: lastName,
                 description
             },
         })

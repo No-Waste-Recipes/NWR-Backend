@@ -27,6 +27,7 @@ class RecipeModel {
                     user: {
                         select: {
                             username: true,
+                            id: true
                         }
                     },
                     ingredients: {
@@ -38,7 +39,8 @@ class RecipeModel {
                         include: {
                             user: {
                                 select: {
-                                    username: true
+                                    username: true,
+                                    id: true
                                 }
                             }
                         }
@@ -106,6 +108,68 @@ class RecipeModel {
                     userId: userId,
                 },
             });
+        });
+    }
+    approveRecipes() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.recipe.findMany({
+                where: {
+                    status: "TO_BE_APPROVED"
+                }
+            });
+        });
+    }
+    approveRecipe(slug, status) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.recipe.update({
+                where: {
+                    slug: slug
+                },
+                data: {
+                    status: status
+                }
+            });
+        });
+    }
+    deleteRecipe({ recipeId, user }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const recipe = yield prisma.recipe.findUnique({
+                where: {
+                    id: parseInt(recipeId)
+                }
+            });
+            if (recipe.userId == user.id || user.role == "ADMIN") {
+                yield prisma.comment.deleteMany({
+                    where: {
+                        recipeId: parseInt(recipeId)
+                    }
+                });
+                return yield prisma.recipe.delete({
+                    where: {
+                        id: parseInt(recipeId)
+                    }
+                });
+            }
+            throw new Error();
+        });
+    }
+    deleteComment({ commentId, user }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const comment = yield prisma.comment.findUnique({
+                where: {
+                    id: parseInt(commentId)
+                }
+            });
+            if (comment.userId == user.id || user.role == "ADMIN") {
+                return yield prisma.comment.delete({
+                    where: {
+                        id: parseInt(commentId)
+                    }
+                });
+            }
+            else {
+                console.log("No rights");
+            }
         });
     }
     createComment({ slug, text, userId }) {

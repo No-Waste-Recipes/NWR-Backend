@@ -17,7 +17,7 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const jwt = require('jsonwebtoken');
 dotenv_1.default.config();
-const auth = () => {
+const auth = (...roles) => {
     return function (req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -34,6 +34,9 @@ const auth = () => {
                         id: parseInt(decoded.user_id)
                     }
                 });
+                if (roles.length && !roles.includes(req.currentUser.role)) {
+                    return res.status(401).send("You don't have the right permissions to edit this.");
+                }
                 next();
             }
             catch (e) {
