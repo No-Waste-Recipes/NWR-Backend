@@ -9,5 +9,6 @@ router.post('/login', controller.loginUser)
 router.get('/favorites', auth(), controller.getFavoriteRecipes)
 router.post('/favorites', auth(), controller.setFavoriteRecipe)
 router.delete('/favorites', auth(), controller.deleteFavoriteRecipe)
+router.get('/favorites/:id', auth(), controller.findFavoriteRecipe)
 
 export = router

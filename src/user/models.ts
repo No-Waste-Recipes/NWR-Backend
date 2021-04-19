@@ -50,6 +50,8 @@ export class UserModel {
                     userId
                 },
             })
+        } else {
+            await this.deleteFavoriteRecipe({userId, recipeId})
         }
     }
 
@@ -60,5 +62,14 @@ export class UserModel {
                 recipeId: recipeId
             }
         })
+    }
+
+    async findFavoriteRecipe({userId, recipeId}) {
+        return await prisma.favorite.findMany({
+            where: {
+                userId: userId,
+                recipeId: parseInt(recipeId)
+            },
+        });
     }
 }
