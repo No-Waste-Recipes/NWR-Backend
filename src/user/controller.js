@@ -52,11 +52,11 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     const isMatch = yield bcrypt.compare(pass, user.password);
     if (!isMatch) {
-        return res.status(401).send("Email or password is wrong");
+        return res.status(401).send('Email or password is wrong');
     }
     const secretKey = process.env.SECRET_JWT || "";
     const token = jwt.sign({ user_id: user.id.toString() }, secretKey, {
-        expiresIn: "24h",
+        expiresIn: '24h'
     });
     const { password } = user, userWithoutPassword = __rest(user, ["password"]);
     res.send({ user: Object.assign({}, userWithoutPassword), token });
@@ -70,20 +70,26 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 const getFavoriteRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.getFavoriteRecipes({ id: req.currentUser.id });
     return res.status(200).json({
-        recipes,
+        recipes
     });
 });
 const setFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.setFavoriteRecipe({ userId: req.currentUser.id, recipeId: req.body.recipeId });
     return res.status(200).json({
-        recipes,
+        recipes
     });
 });
 const deleteFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.deleteFavoriteRecipe({ userId: req.currentUser.id, recipeId: req.body.recipeId });
     return res.status(200).json({
-        recipes,
+        recipes
     });
 });
-exports.default = { creatUser, updateUser, deleteUser, loginUser, getUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe };
+const findFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const recipes = yield userModel.findFavoriteRecipe({ userId: req.currentUser.id, recipeId: req.params.id });
+    return res.status(200).json({
+        recipes
+    });
+});
+exports.default = { creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser };
 //# sourceMappingURL=controller.js.map

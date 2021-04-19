@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 export class UserModel {
 
@@ -36,49 +36,60 @@ export class UserModel {
     public async loginUser({ email, password: pass}) {
         return await prisma.user.findUnique({
             where: {
-                email,
+                email
             }
-        });
+        })
     }
 
     public async getUser({id}) {
         return await prisma.user.findFirst( {where: { id}} );
     }
 
-    public async getFavoriteRecipes({ id }) {
+    async getFavoriteRecipes({ id }) {
         return await prisma.favorite.findMany({
             where: {
-                userId: id,
+                userId: id
             },
             include: {
-                recipe: true,
-            },
-        });
+                recipe: true
+            }
+        })
     }
 
-    public async setFavoriteRecipe({ userId, recipeId }) {
-        const duplicateCheck = await prisma.favorite.findMany({
+    async setFavoriteRecipe({ userId, recipeId }) {
+        let duplicateCheck = await prisma.favorite.findMany({
             where: {
-                userId,
-                recipeId,
+                userId: userId,
+                recipeId: recipeId
             },
         });
 
-        if (duplicateCheck.length === 0) {
+        if (duplicateCheck.length == 0) {
             return await prisma.favorite.create({
                 data: {
                     recipeId,
-                    userId,
+                    userId
                 },
-            });
+            })
+        } else {
+            await this.deleteFavoriteRecipe({userId, recipeId})
         }
     }
 
-    public async deleteFavoriteRecipe({ userId, recipeId }) {
+    async deleteFavoriteRecipe({ userId, recipeId }) {
         return await prisma.favorite.deleteMany({
             where: {
-                userId,
-                recipeId,
+                userId: userId,
+                recipeId: recipeId
+            }
+        })
+    }
+
+    async findFavoriteRecipe({userId, recipeId}) {
+        return await prisma.favorite.findMany({
+            where: {
+                userId: userId,
+                recipeId: parseInt(recipeId)
             },
         });
     }

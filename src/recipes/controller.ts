@@ -31,6 +31,17 @@ const getRecipe = async (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
+const deleteRecipe = async (req: any, res: Response, next: NextFunction) => {
+    const result = await recipe.deleteRecipe({recipeId: req.params.id, user: req.currentUser})
+        .catch(() => {
+            return res.status(401).json()
+        })
+
+    return res.status(200).json({
+        result
+    })
+}
+
 const createComment =  async (req: any, res: Response, next: NextFunction) => {
     const comment = await recipe.createComment({slug: req.params.slug, text: req.body.text, userId: req.currentUser.id})
 
@@ -39,4 +50,31 @@ const createComment =  async (req: any, res: Response, next: NextFunction) => {
     })
 }
 
-export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment}
+const deleteComment = async (req: any, res: Response, next: NextFunction) => {
+    const deleteComment = await recipe.deleteComment({commentId: req.params.id, user: req.currentUser})
+        .catch(() => {
+            return res.status(401).json()
+        })
+
+    return res.status(200).json({
+        deleteComment
+    })
+}
+
+const getApproveRecipes = async (req: any, res: Response, next: NextFunction) => {
+    const result = await recipe.approveRecipes();
+
+    return res.status(200).json({
+        result
+    })
+}
+
+const approveRecipe = async (req: any, res: Response, next: NextFunction) => {
+    const result = await recipe.approveRecipe(req.params.slug, req.body.status);
+
+    return res.status(200).json({
+        result
+    })
+}
+
+export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe}

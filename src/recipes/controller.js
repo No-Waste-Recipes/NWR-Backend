@@ -33,11 +33,41 @@ const getRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         result
     });
 });
+const deleteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield recipe.deleteRecipe({ recipeId: req.params.id, user: req.currentUser })
+        .catch(() => {
+        return res.status(401).json();
+    });
+    return res.status(200).json({
+        result
+    });
+});
 const createComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const comment = yield recipe.createComment({ slug: req.params.slug, text: req.body.text, userId: req.currentUser.id });
     return res.status(200).json({
         comment
     });
 });
-exports.default = { getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment };
+const deleteComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const deleteComment = yield recipe.deleteComment({ commentId: req.params.id, user: req.currentUser })
+        .catch(() => {
+        return res.status(401).json();
+    });
+    return res.status(200).json({
+        deleteComment
+    });
+});
+const getApproveRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield recipe.approveRecipes();
+    return res.status(200).json({
+        result
+    });
+});
+const approveRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield recipe.approveRecipe(req.params.slug, req.body.status);
+    return res.status(200).json({
+        result
+    });
+});
+exports.default = { getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe };
 //# sourceMappingURL=controller.js.map

@@ -30,7 +30,8 @@ class IngredientModel {
                     id: {
                         notIn: array
                     }
-                }
+                },
+                take: 7
             });
         });
     }

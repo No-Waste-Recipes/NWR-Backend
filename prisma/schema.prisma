@@ -18,6 +18,12 @@ model User {
   Recipe      Recipe[]
   Comments    Comment[]
   Favorite    Favorite[]
+  role    Role     @default(USER)
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Favorite {

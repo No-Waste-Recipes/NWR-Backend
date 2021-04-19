@@ -50,7 +50,7 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.user.findUnique({
                 where: {
-                    email,
+                    email
                 }
             });
         });
@@ -64,29 +64,32 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.favorite.findMany({
                 where: {
-                    userId: id,
+                    userId: id
                 },
                 include: {
-                    recipe: true,
-                },
+                    recipe: true
+                }
             });
         });
     }
     setFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const duplicateCheck = yield prisma.favorite.findMany({
+            let duplicateCheck = yield prisma.favorite.findMany({
                 where: {
-                    userId,
-                    recipeId,
+                    userId: userId,
+                    recipeId: recipeId
                 },
             });
-            if (duplicateCheck.length === 0) {
+            if (duplicateCheck.length == 0) {
                 return yield prisma.favorite.create({
                     data: {
                         recipeId,
-                        userId,
+                        userId
                     },
                 });
+            }
+            else {
+                yield this.deleteFavoriteRecipe({ userId, recipeId });
             }
         });
     }
@@ -94,8 +97,18 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.favorite.deleteMany({
                 where: {
-                    userId,
-                    recipeId,
+                    userId: userId,
+                    recipeId: recipeId
+                }
+            });
+        });
+    }
+    findFavoriteRecipe({ userId, recipeId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.favorite.findMany({
+                where: {
+                    userId: userId,
+                    recipeId: parseInt(recipeId)
                 },
             });
         });
