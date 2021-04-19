@@ -20,8 +20,8 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const models_1 = require("./models");
 const userModel = new models_1.UserModel();
 const creatUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -33,6 +33,16 @@ const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.password) {
         req.body.password = yield bcrypt.hash(req.body.password, 8);
     }
+});
+const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel.updateUser(req.currentUser.id, Object.assign({}, req.body));
+    return res.status(200).json({ user, });
+});
+const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel.deleteUser({ id: req.currentUser.id });
+    return res.status(200).json({
+        user,
+    });
 });
 const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password: pass } = req.body;
@@ -50,6 +60,12 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     });
     const { password } = user, userWithoutPassword = __rest(user, ["password"]);
     res.send({ user: Object.assign({}, userWithoutPassword), token });
+});
+const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel.getUser({ id: req.currentUser.id });
+    return res.status(200).json({
+        user,
+    });
 });
 const getFavoriteRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.getFavoriteRecipes({ id: req.currentUser.id });
@@ -75,5 +91,5 @@ const findFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0,
         recipes
     });
 });
-exports.default = { creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe };
+exports.default = { creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser };
 //# sourceMappingURL=controller.js.map
