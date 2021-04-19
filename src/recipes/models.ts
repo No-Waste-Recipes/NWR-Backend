@@ -134,9 +134,8 @@ export class RecipeModel {
                     id: parseInt(recipeId)
                 }
             })
-        } else {
-            console.log("No rights")
         }
+        throw new Error()
     }
 
     async deleteComment({commentId, user}) {
@@ -152,10 +151,8 @@ export class RecipeModel {
                     id: parseInt(commentId)
                 }
             })
-        } else {
-            console.log("No rights")
         }
-
+        throw new Error()
     }
 
     async createComment({slug, text, userId}) {

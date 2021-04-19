@@ -150,9 +150,7 @@ class RecipeModel {
                     }
                 });
             }
-            else {
-                console.log("No rights");
-            }
+            throw new Error();
         });
     }
     deleteComment({ commentId, user }) {
