@@ -34,10 +34,7 @@ const getRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     });
 });
 const deleteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield recipe.deleteRecipe({ recipeId: req.params.id, user: req.currentUser })
-        .catch(() => {
-        return res.status(401).json();
-    });
+    const result = yield recipe.deleteRecipe({ recipeId: req.params.id, user: req.currentUser });
     return res.status(200).json({
         result
     });

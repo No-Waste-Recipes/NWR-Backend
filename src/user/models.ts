@@ -29,6 +29,12 @@ export class UserModel {
         })
     }
 
+    public async getUserByEmail({email}) {
+        return await prisma.user.findUnique({
+            where: {email}
+        })
+    }
+
     public async deleteUser({id}) {
         return await prisma.user.delete( {where: { id }} );
     }
@@ -92,5 +98,9 @@ export class UserModel {
                 recipeId: parseInt(recipeId)
             },
         });
+    }
+
+    async getAllUsers() {
+        return await prisma.user.findMany()
     }
 }

@@ -129,9 +129,19 @@ export class RecipeModel {
                 id: parseInt(recipeId)
             }
         })
-
         if (recipe.userId == user.id || user.role == "ADMIN") {
-            await  prisma.comment.deleteMany({
+            await prisma.recipeIngredients.deleteMany({
+                where: {
+                    recipeId: parseInt(recipeId)
+                }
+            })
+
+            await prisma.favorite.deleteMany({
+                where: {
+                    recipeId: parseInt(recipeId)
+                }
+            })
+            await prisma.comment.deleteMany({
                 where: {
                     recipeId: parseInt(recipeId)
                 }
@@ -142,7 +152,6 @@ export class RecipeModel {
                 }
             })
         }
-        throw new Error()
     }
 
     async deleteComment({commentId, user}) {

@@ -12,7 +12,7 @@ router.post('', controller_1.default.CreateRecipe);
 router.delete('/:id', auth(), controller_1.default.deleteRecipe);
 router.get('/popular', controller_1.default.getPopularRecipes);
 router.get('/approve', auth(Role.Admin), controller_1.default.getApproveRecipes);
-router.post('/approve/:slug', auth(), controller_1.default.approveRecipe);
+router.post('/approve/:slug', auth(Role.Admin), controller_1.default.approveRecipe);
 router.get('/:slug', controller_1.default.getRecipe);
 router.post('/:slug/comment', auth(), controller_1.default.createComment);
 router.delete('/:slug/comment/:id', auth(), controller_1.default.deleteComment);

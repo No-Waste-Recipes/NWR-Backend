@@ -13,18 +13,44 @@ exports.UserModel = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 class UserModel {
-    createUser({ email, username, password, firstName, lastName, description }) {
+    createUser({ email, username, password, first_name, last_name, description }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.user.create({
                 data: {
                     email,
                     username,
                     password,
-                    first_name: firstName,
-                    last_name: lastName,
+                    first_name,
+                    last_name,
                     description
                 },
             });
+        });
+    }
+    updateUser(userId, { email, username, first_name, last_name, description }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.update({
+                where: { id: parseInt(userId) },
+                data: {
+                    email,
+                    username,
+                    first_name,
+                    last_name,
+                    description,
+                }
+            });
+        });
+    }
+    getUserByEmail({ email }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.findUnique({
+                where: { email }
+            });
+        });
+    }
+    deleteUser({ id }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.delete({ where: { id } });
         });
     }
     loginUser({ email, password: pass }) {
@@ -34,6 +60,11 @@ class UserModel {
                     email
                 }
             });
+        });
+    }
+    getUser({ id }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.findFirst({ where: { id } });
         });
     }
     getFavoriteRecipes({ id }) {
@@ -87,6 +118,11 @@ class UserModel {
                     recipeId: parseInt(recipeId)
                 },
             });
+        });
+    }
+    getAllUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.findMany();
         });
     }
 }
