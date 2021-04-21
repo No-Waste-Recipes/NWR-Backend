@@ -25,9 +25,12 @@ const jwt = require("jsonwebtoken");
 const models_1 = require("./models");
 const userModel = new models_1.UserModel();
 const creatUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel.getUserByEmail(req.body);
+    if (user)
+        return res.status(201).send({ "errors": [{ "email": "email already exists" }] });
     yield hashPassword(req);
     const result = yield userModel.createUser(req.body);
-    res.status(201).send(result);
+    return res.status(201).send(result);
 });
 const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.password) {
@@ -91,5 +94,27 @@ const findFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0,
         recipes
     });
 });
-exports.default = { creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser };
+const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.currentUser.role == "ADMIN") {
+        const users = yield userModel.getAllUsers();
+        return res.status(200).json({
+            users
+        });
+    }
+    else {
+        return res.status(401);
+    }
+});
+const deleteSpecificUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.currentUser.role == "ADMIN") {
+        const user = yield userModel.deleteUser({ id: parseInt(req.params.id) });
+        return res.status(200).json({
+            user
+        });
+    }
+    else {
+        return res.status(401);
+    }
+});
+exports.default = { creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser, getAllUsers, deleteSpecificUser };
 //# sourceMappingURL=controller.js.map

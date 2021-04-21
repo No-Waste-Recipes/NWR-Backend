@@ -54,7 +54,14 @@ class RecipeModel {
             let ingredientListInt = [];
             const payload = {
                 where: {
-                    AND: undefined
+                    OR: undefined
+                },
+                include: {
+                    ingredients: {
+                        include: {
+                            ingredient: true
+                        }
+                    },
                 }
             };
             if (ingredients) {
@@ -73,7 +80,7 @@ class RecipeModel {
                     });
                     ingredientListInt.push(parseInt(ingredients));
                 }
-                payload.where.AND = whereAnd;
+                payload.where.OR = whereAnd;
                 let ingredientsList = yield prisma.ingredient.findMany({
                     where: {
                         id: {
@@ -139,6 +146,16 @@ class RecipeModel {
                 }
             });
             if (recipe.userId == user.id || user.role == "ADMIN") {
+                yield prisma.recipeIngredients.deleteMany({
+                    where: {
+                        recipeId: parseInt(recipeId)
+                    }
+                });
+                yield prisma.favorite.deleteMany({
+                    where: {
+                        recipeId: parseInt(recipeId)
+                    }
+                });
                 yield prisma.comment.deleteMany({
                     where: {
                         recipeId: parseInt(recipeId)
@@ -150,7 +167,6 @@ class RecipeModel {
                     }
                 });
             }
-            throw new Error();
         });
     }
     deleteComment({ commentId, user }) {

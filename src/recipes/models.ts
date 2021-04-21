@@ -39,7 +39,14 @@ export class RecipeModel {
         let ingredientListInt = []
         const payload = {
             where: {
-                AND: undefined
+                OR: undefined
+            },
+            include: {
+                ingredients: {
+                    include: {
+                        ingredient: true
+                    }
+                },
             }
         }
         if(ingredients) {
@@ -57,7 +64,7 @@ export class RecipeModel {
                 })
                 ingredientListInt.push(parseInt(ingredients))
             }
-            payload.where.AND = whereAnd
+            payload.where.OR = whereAnd
 
             let ingredientsList = await prisma.ingredient.findMany({
                 where: {
@@ -122,9 +129,19 @@ export class RecipeModel {
                 id: parseInt(recipeId)
             }
         })
-
         if (recipe.userId == user.id || user.role == "ADMIN") {
-            await  prisma.comment.deleteMany({
+            await prisma.recipeIngredients.deleteMany({
+                where: {
+                    recipeId: parseInt(recipeId)
+                }
+            })
+
+            await prisma.favorite.deleteMany({
+                where: {
+                    recipeId: parseInt(recipeId)
+                }
+            })
+            await prisma.comment.deleteMany({
                 where: {
                     recipeId: parseInt(recipeId)
                 }
@@ -135,7 +152,6 @@ export class RecipeModel {
                 }
             })
         }
-        throw new Error()
     }
 
     async deleteComment({commentId, user}) {

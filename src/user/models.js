@@ -22,7 +22,7 @@ class UserModel {
                     password,
                     first_name,
                     last_name,
-                    description,
+                    description
                 },
             });
         });
@@ -38,6 +38,13 @@ class UserModel {
                     last_name,
                     description,
                 }
+            });
+        });
+    }
+    getUserByEmail({ email }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.findUnique({
+                where: { email }
             });
         });
     }
@@ -111,6 +118,11 @@ class UserModel {
                     recipeId: parseInt(recipeId)
                 },
             });
+        });
+    }
+    getAllUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.user.findMany();
         });
     }
 }

@@ -9,11 +9,15 @@ const userModel = new UserModel();
 
 const creatUser = async (req: Request, res: Response, next: NextFunction) => {
 
+    const user = await userModel.getUserByEmail(req.body)
+
+    if (user)
+        return res.status(201).send({"errors": [{"email": "email already exists"}]})
     await hashPassword(req)
 
     const result = await userModel.createUser(req.body)
 
-    res.status(201).send(result)
+    return res.status(201).send(result)
 }
 
 const hashPassword = async (req) => {
@@ -101,4 +105,28 @@ const findFavoriteRecipe = async (req: any, res: Response, next: NextFunction) =
     });
 }
 
-export default {creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser}
+const getAllUsers = async (req: any, res: Response, next: NextFunction) => {
+    if (req.currentUser.role == "ADMIN") {
+        const users = await userModel.getAllUsers()
+
+        return res.status(200).json({
+            users
+        })
+    } else {
+        return res.status(401)
+    }
+}
+
+const deleteSpecificUser = async (req: any, res: Response, next: NextFunction) => {
+    if (req.currentUser.role == "ADMIN") {
+        const user = await userModel.deleteUser({id: parseInt(req.params.id)})
+
+        return res.status(200).json({
+            user
+        })
+    } else {
+        return res.status(401)
+    }
+}
+
+export default {creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser, getAllUsers, deleteSpecificUser}
