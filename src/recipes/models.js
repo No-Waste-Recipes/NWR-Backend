@@ -105,9 +105,9 @@ class RecipeModel {
             });
         });
     }
-    createRecipe({ title, description, userId }) {
+    createRecipe({ title, description, ingredients }, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.recipe.create({
+            const recipe = yield prisma.recipe.create({
                 data: {
                     title: title,
                     slug: slugify_1.default(title),
@@ -115,6 +115,14 @@ class RecipeModel {
                     userId: userId,
                 },
             });
+            for (let ingredient of ingredients) {
+                yield prisma.recipeIngredients.create({
+                    data: {
+                        recipeId: recipe.id, ingredientId: ingredient.id
+                    }
+                });
+            }
+            return recipe;
         });
     }
     approveRecipes() {

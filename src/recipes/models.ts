@@ -1,4 +1,5 @@
 import {PrismaClient} from "@prisma/client";
+import { mainModule } from "node:process";
 const prisma = new PrismaClient()
 import slugify from "slugify"
 
@@ -93,8 +94,8 @@ export class RecipeModel {
         })
     }
 
-    async createRecipe({ title, description, userId }) {
-        return await prisma.recipe.create({
+    async createRecipe({ title, description, ingredients}, userId) {
+        const recipe = await prisma.recipe.create({
             data: {
                 title: title,
                 slug: slugify(title),
@@ -102,6 +103,15 @@ export class RecipeModel {
                 userId: userId,
             },
         })
+
+        for(let ingredient of ingredients){
+            await prisma.recipeIngredients.create({
+                data: {
+                    recipeId: recipe.id, ingredientId: ingredient.id
+                }
+            })
+        }
+        return recipe
     }
 
     async approveRecipes() {

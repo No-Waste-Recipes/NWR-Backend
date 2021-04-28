@@ -8,7 +8,7 @@ const auth = require('../middleware/auth');
 const Role = require('../utils/userRoles');
 const router = express_1.default.Router();
 router.get('', controller_1.default.getRecipes);
-router.post('', controller_1.default.CreateRecipe);
+router.post('', auth(), controller_1.default.CreateRecipe);
 router.delete('/:id', auth(), controller_1.default.deleteRecipe);
 router.get('/popular', controller_1.default.getPopularRecipes);
 router.get('/approve', auth(Role.Admin), controller_1.default.getApproveRecipes);
