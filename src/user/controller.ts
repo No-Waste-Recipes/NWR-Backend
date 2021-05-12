@@ -26,12 +26,12 @@ const hashPassword = async (req) => {
     }
 };
 
-const updateUser= async (req: any, res: Response, next: NextFunction)=>{
+const updateUser = async (req: any, res: Response, next: NextFunction)=>{
     const user = await userModel.updateUser(req.currentUser.id, {...req.body});
     return res.status(200).json({user,});
 };
 
-const deleteUser =async (req: any, res: Response, next: NextFunction) => {
+const deleteUser = async (req: any, res: Response, next: NextFunction) => {
     const user = await userModel.deleteUser({id: req.currentUser.id});
 
     return res.status(200).json({

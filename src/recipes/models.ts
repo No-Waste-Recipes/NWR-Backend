@@ -1,4 +1,5 @@
 import {PrismaClient} from "@prisma/client";
+import { Prisma } from "@prisma/client";
 const prisma = new PrismaClient()
 import slugify from "slugify"
 
@@ -50,31 +51,25 @@ export class RecipeModel {
             }
         }
         if(ingredients) {
-            const whereAnd = []
+            const ids = []
             if (Array.isArray(ingredients) && ingredients.length > 1) {
                 ingredients.forEach((id) => {
-                    whereAnd.push({
-                        ingredients: { some: { ingredientId: parseInt(id)}}
-                    })
-                    ingredientListInt.push(parseInt(id))
+                    ids.push(parseInt(id))
                 })
             } else {
-                whereAnd.push({
-                    ingredients: { some: { ingredientId: parseInt(ingredients)}}
-                })
-                ingredientListInt.push(parseInt(ingredients))
+                ids.push(parseInt(ingredients))
             }
-            payload.where.OR = whereAnd
+            const recipes = await prisma.$queryRaw`SELECT r.* FROM recipe r join recipeingredients ri on ri.recipeId = r.id where ri.ingredientId in (${Prisma.join(ids)}) group by r.id order by ri.ingredientId DESC`;
 
             let ingredientsList = await prisma.ingredient.findMany({
                 where: {
                     id: {
-                        in: ingredientListInt
+                        in: ids
                     }
                 }
             })
 
-            return {'ingredients': ingredientsList, 'recipes': await prisma.recipe.findMany(payload) }
+            return {'ingredients': ingredientsList, 'recipes': recipes }
         }
         return {'recipes': await prisma.recipe.findMany() }
 
@@ -94,13 +89,19 @@ export class RecipeModel {
     }
 
     async createRecipe({ title, description, userId }) {
-        return await prisma.recipe.create({
+        await prisma.recipe.create({
             data: {
                 title: title,
                 slug: slugify(title),
                 description,
                 userId: userId,
             },
+        })
+        return await prisma.recipeIngredients.create({
+            data: {
+               recipeId: 1,
+               ingredientId: 1
+            }
         })
     }
 
