@@ -6,7 +6,7 @@ const Role = require('../utils/userRoles');
 const router = express.Router();
 
 router.get('', controller.getRecipes)
-router.post('', controller.CreateRecipe)
+router.post('', auth(), controller.CreateRecipe)
 router.delete('/:id', auth(), controller.deleteRecipe)
 router.get('/popular', controller.getPopularRecipes)
 router.get('/approve', auth(Role.Admin), controller.getApproveRecipes)

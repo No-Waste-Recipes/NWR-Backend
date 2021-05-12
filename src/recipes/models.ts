@@ -88,8 +88,8 @@ export class RecipeModel {
         })
     }
 
-    async createRecipe({ title, description, userId }) {
-        await prisma.recipe.create({
+    async createRecipe({ title, description, ingredients}, userId) {
+        const recipe = await prisma.recipe.create({
             data: {
                 title: title,
                 slug: slugify(title),
@@ -97,12 +97,15 @@ export class RecipeModel {
                 userId: userId,
             },
         })
-        return await prisma.recipeIngredients.create({
-            data: {
-               recipeId: 1,
-               ingredientId: 1
-            }
-        })
+
+        for(let ingredient of ingredients){
+            await prisma.recipeIngredients.create({
+                data: {
+                    recipeId: recipe.id, ingredientId: ingredient.id
+                }
+            })
+        }
+        return recipe
     }
 
     async approveRecipes() {
@@ -130,6 +133,7 @@ export class RecipeModel {
                 id: parseInt(recipeId)
             }
         })
+
         if (recipe.userId == user.id || user.role == "ADMIN") {
             await prisma.recipeIngredients.deleteMany({
                 where: {
