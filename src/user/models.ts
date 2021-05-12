@@ -11,7 +11,7 @@ export class UserModel {
                 password,
                 first_name,
                 last_name,
-                description,
+                description
             },
         });
     }
@@ -26,6 +26,12 @@ export class UserModel {
                 last_name,
                 description,
             }
+        })
+    }
+
+    public async getUserByEmail({email}) {
+        return await prisma.user.findUnique({
+            where: {email}
         })
     }
 
@@ -92,5 +98,9 @@ export class UserModel {
                 recipeId: parseInt(recipeId)
             },
         });
+    }
+
+    async getAllUsers() {
+        return await prisma.user.findMany()
     }
 }

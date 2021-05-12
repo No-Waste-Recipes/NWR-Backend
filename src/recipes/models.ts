@@ -1,4 +1,5 @@
 import {PrismaClient} from "@prisma/client";
+import { mainModule } from "node:process";
 const prisma = new PrismaClient()
 import slugify from "slugify"
 
@@ -39,7 +40,14 @@ export class RecipeModel {
         let ingredientListInt = []
         const payload = {
             where: {
-                AND: undefined
+                OR: undefined
+            },
+            include: {
+                ingredients: {
+                    include: {
+                        ingredient: true
+                    }
+                },
             }
         }
         if(ingredients) {
@@ -57,7 +65,7 @@ export class RecipeModel {
                 })
                 ingredientListInt.push(parseInt(ingredients))
             }
-            payload.where.AND = whereAnd
+            payload.where.OR = whereAnd
 
             let ingredientsList = await prisma.ingredient.findMany({
                 where: {
@@ -86,8 +94,8 @@ export class RecipeModel {
         })
     }
 
-    async createRecipe({ title, description, userId }) {
-        return await prisma.recipe.create({
+    async createRecipe({ title, description, ingredients}, userId) {
+        const recipe = await prisma.recipe.create({
             data: {
                 title: title,
                 slug: slugify(title),
@@ -95,6 +103,15 @@ export class RecipeModel {
                 userId: userId,
             },
         })
+
+        for(let ingredient of ingredients){
+            await prisma.recipeIngredients.create({
+                data: {
+                    recipeId: recipe.id, ingredientId: ingredient.id
+                }
+            })
+        }
+        return recipe
     }
 
     async approveRecipes() {
@@ -122,9 +139,19 @@ export class RecipeModel {
                 id: parseInt(recipeId)
             }
         })
-
         if (recipe.userId == user.id || user.role == "ADMIN") {
-            await  prisma.comment.deleteMany({
+            await prisma.recipeIngredients.deleteMany({
+                where: {
+                    recipeId: parseInt(recipeId)
+                }
+            })
+
+            await prisma.favorite.deleteMany({
+                where: {
+                    recipeId: parseInt(recipeId)
+                }
+            })
+            await prisma.comment.deleteMany({
                 where: {
                     recipeId: parseInt(recipeId)
                 }
@@ -135,7 +162,6 @@ export class RecipeModel {
                 }
             })
         }
-        throw new Error()
     }
 
     async deleteComment({commentId, user}) {

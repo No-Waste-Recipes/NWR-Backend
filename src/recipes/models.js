@@ -54,7 +54,14 @@ class RecipeModel {
             let ingredientListInt = [];
             const payload = {
                 where: {
-                    AND: undefined
+                    OR: undefined
+                },
+                include: {
+                    ingredients: {
+                        include: {
+                            ingredient: true
+                        }
+                    },
                 }
             };
             if (ingredients) {
@@ -73,7 +80,7 @@ class RecipeModel {
                     });
                     ingredientListInt.push(parseInt(ingredients));
                 }
-                payload.where.AND = whereAnd;
+                payload.where.OR = whereAnd;
                 let ingredientsList = yield prisma.ingredient.findMany({
                     where: {
                         id: {
@@ -98,9 +105,9 @@ class RecipeModel {
             });
         });
     }
-    createRecipe({ title, description, userId }) {
+    createRecipe({ title, description, ingredients }, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.recipe.create({
+            const recipe = yield prisma.recipe.create({
                 data: {
                     title: title,
                     slug: slugify_1.default(title),
@@ -108,6 +115,14 @@ class RecipeModel {
                     userId: userId,
                 },
             });
+            for (let ingredient of ingredients) {
+                yield prisma.recipeIngredients.create({
+                    data: {
+                        recipeId: recipe.id, ingredientId: ingredient.id
+                    }
+                });
+            }
+            return recipe;
         });
     }
     approveRecipes() {
@@ -139,6 +154,16 @@ class RecipeModel {
                 }
             });
             if (recipe.userId == user.id || user.role == "ADMIN") {
+                yield prisma.recipeIngredients.deleteMany({
+                    where: {
+                        recipeId: parseInt(recipeId)
+                    }
+                });
+                yield prisma.favorite.deleteMany({
+                    where: {
+                        recipeId: parseInt(recipeId)
+                    }
+                });
                 yield prisma.comment.deleteMany({
                     where: {
                         recipeId: parseInt(recipeId)
@@ -150,7 +175,6 @@ class RecipeModel {
                     }
                 });
             }
-            throw new Error();
         });
     }
     deleteComment({ commentId, user }) {

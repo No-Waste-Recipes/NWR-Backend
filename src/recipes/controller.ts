@@ -15,8 +15,8 @@ const getPopularRecipes = async (req: Request, res: Response, next: NextFunction
     });
 }
 
-const CreateRecipe = async (req: Request, res: Response, next: NextFunction) => {
-    const result = await recipe.createRecipe(req.body)
+const CreateRecipe = async (req: any, res: Response, next: NextFunction) => {
+    const result = await recipe.createRecipe(req.body, req.currentUser.id)
 
     return res.status(200).json({
         result
@@ -33,9 +33,6 @@ const getRecipe = async (req: Request, res: Response, next: NextFunction) => {
 
 const deleteRecipe = async (req: any, res: Response, next: NextFunction) => {
     const result = await recipe.deleteRecipe({recipeId: req.params.id, user: req.currentUser})
-        .catch(() => {
-            return res.status(401).json()
-        })
 
     return res.status(200).json({
         result
