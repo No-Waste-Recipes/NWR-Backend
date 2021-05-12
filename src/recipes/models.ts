@@ -37,19 +37,6 @@ export class RecipeModel {
     }
 
     async getRecipes({ingredients}) {
-        let ingredientListInt = []
-        const payload = {
-            where: {
-                OR: undefined
-            },
-            include: {
-                ingredients: {
-                    include: {
-                        ingredient: true
-                    }
-                },
-            }
-        }
         if(ingredients) {
             const ids = []
             if (Array.isArray(ingredients) && ingredients.length > 1) {

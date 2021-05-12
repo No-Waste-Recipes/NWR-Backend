@@ -52,19 +52,6 @@ class RecipeModel {
     }
     getRecipes({ ingredients }) {
         return __awaiter(this, void 0, void 0, function* () {
-            let ingredientListInt = [];
-            const payload = {
-                where: {
-                    OR: undefined
-                },
-                include: {
-                    ingredients: {
-                        include: {
-                            ingredient: true
-                        }
-                    },
-                }
-            };
             if (ingredients) {
                 const ids = [];
                 if (Array.isArray(ingredients) && ingredients.length > 1) {
@@ -100,9 +87,9 @@ class RecipeModel {
             });
         });
     }
-    createRecipe({ title, description, userId }) {
+    createRecipe({ title, description, ingredients }, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield prisma.recipe.create({
+            const recipe = yield prisma.recipe.create({
                 data: {
                     title: title,
                     slug: slugify_1.default(title),
@@ -110,12 +97,14 @@ class RecipeModel {
                     userId: userId,
                 },
             });
-            return yield prisma.recipeIngredients.create({
-                data: {
-                    recipeId: 1,
-                    ingredientId: 1
-                }
-            });
+            for (let ingredient of ingredients) {
+                yield prisma.recipeIngredients.create({
+                    data: {
+                        recipeId: recipe.id, ingredientId: ingredient.id
+                    }
+                });
+            }
+            return recipe;
         });
     }
     approveRecipes() {
