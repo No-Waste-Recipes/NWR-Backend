@@ -46,6 +46,7 @@ model Recipe {
   comments    Comment[]
   popularity  Int                 @default(0)
   Favorite    Favorite[]
+  photo       String
 }
 
 model RecipeIngredients {

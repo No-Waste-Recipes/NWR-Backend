@@ -87,7 +87,7 @@ class RecipeModel {
             });
         });
     }
-    createRecipe({ title, description, ingredients }, userId) {
+    createRecipe({ title, description, ingredients }, userId, file_name) {
         return __awaiter(this, void 0, void 0, function* () {
             const recipe = yield prisma.recipe.create({
                 data: {
@@ -95,9 +95,10 @@ class RecipeModel {
                     slug: slugify_1.default(title),
                     description,
                     userId: userId,
+                    photo: `uploads/${file_name}`
                 },
             });
-            for (let ingredient of ingredients) {
+            for (let ingredient of JSON.parse(ingredients)) {
                 yield prisma.recipeIngredients.create({
                     data: {
                         recipeId: recipe.id, ingredientId: ingredient.id
