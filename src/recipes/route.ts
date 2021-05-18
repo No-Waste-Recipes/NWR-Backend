@@ -2,17 +2,7 @@ import express from 'express';
 import controller from './controller';
 const auth = require('../middleware/auth');
 const Role = require('../utils/userRoles');
-const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads')
-    },
-    filename: function (req, file, cb) {
-        cb(null, new Date().toISOString().replace(/[-T:\.Z]/g, "") + file.originalname);
-    }
-});
-
-const upload = multer({storage: storage});
+import { upload } from '../utils/fileUploading';
 
 const router = express.Router();
 

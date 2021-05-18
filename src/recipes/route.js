@@ -6,19 +6,10 @@ const express_1 = __importDefault(require("express"));
 const controller_1 = __importDefault(require("./controller"));
 const auth = require('../middleware/auth');
 const Role = require('../utils/userRoles');
-const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads');
-    },
-    filename: function (req, file, cb) {
-        cb(null, new Date().toISOString().replace(/[-T:\.Z]/g, "") + file.originalname);
-    }
-});
-const upload = multer({ storage: storage });
+const fileUploading_1 = require("../utils/fileUploading");
 const router = express_1.default.Router();
 router.get('', controller_1.default.getRecipes);
-router.post('', auth(), upload.single('photo'), controller_1.default.CreateRecipe);
+router.post('', auth(), fileUploading_1.upload.single('photo'), controller_1.default.CreateRecipe);
 router.delete('/:id', auth(), controller_1.default.deleteRecipe);
 router.get('/popular', controller_1.default.getPopularRecipes);
 router.get('/approve', auth(Role.Admin), controller_1.default.getApproveRecipes);
