@@ -75,17 +75,17 @@ export class RecipeModel {
         })
     }
 
-    async createRecipe({ title, description, ingredients}, userId) {
+    async createRecipe({ title, description, ingredients}, userId, file_name) {
         const recipe = await prisma.recipe.create({
             data: {
                 title: title,
                 slug: slugify(title),
                 description,
                 userId: userId,
+                photo: `uploads/${file_name}`
             },
         })
-
-        for(let ingredient of ingredients){
+        for(let ingredient of JSON.parse(ingredients)){
             await prisma.recipeIngredients.create({
                 data: {
                     recipeId: recipe.id, ingredientId: ingredient.id

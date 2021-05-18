@@ -13,13 +13,14 @@ const route_3 = __importDefault(require("./user/route"));
 app.listen(3000, function () {
     console.log("Server running on port 3000");
 });
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.use(express.json());
 app.use(cors());
 // Enable pre-flight
 app.options("*", cors());
+app.use('/uploads', express.static('uploads'));
 /* Routes */
 app.use('/recipes', route_1.default);
 app.use('/ingredients', route_2.default);
