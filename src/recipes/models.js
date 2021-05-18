@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipeModel = void 0;
 const client_1 = require("@prisma/client");
+const client_2 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const slugify_1 = __importDefault(require("slugify"));
 class RecipeModel {
@@ -51,44 +52,25 @@ class RecipeModel {
     }
     getRecipes({ ingredients }) {
         return __awaiter(this, void 0, void 0, function* () {
-            let ingredientListInt = [];
-            const payload = {
-                where: {
-                    OR: undefined
-                },
-                include: {
-                    ingredients: {
-                        include: {
-                            ingredient: true
-                        }
-                    },
-                }
-            };
             if (ingredients) {
-                const whereAnd = [];
+                const ids = [];
                 if (Array.isArray(ingredients) && ingredients.length > 1) {
                     ingredients.forEach((id) => {
-                        whereAnd.push({
-                            ingredients: { some: { ingredientId: parseInt(id) } }
-                        });
-                        ingredientListInt.push(parseInt(id));
+                        ids.push(parseInt(id));
                     });
                 }
                 else {
-                    whereAnd.push({
-                        ingredients: { some: { ingredientId: parseInt(ingredients) } }
-                    });
-                    ingredientListInt.push(parseInt(ingredients));
+                    ids.push(parseInt(ingredients));
                 }
-                payload.where.OR = whereAnd;
+                const recipes = yield prisma.$queryRaw `SELECT r.* FROM recipe r join recipeingredients ri on ri.recipeId = r.id where ri.ingredientId in (${client_2.Prisma.join(ids)}) group by r.id order by ri.ingredientId DESC`;
                 let ingredientsList = yield prisma.ingredient.findMany({
                     where: {
                         id: {
-                            in: ingredientListInt
+                            in: ids
                         }
                     }
                 });
-                return { 'ingredients': ingredientsList, 'recipes': yield prisma.recipe.findMany(payload) };
+                return { 'ingredients': ingredientsList, 'recipes': recipes };
             }
             return { 'recipes': yield prisma.recipe.findMany() };
         });
