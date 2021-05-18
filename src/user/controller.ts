@@ -73,6 +73,14 @@ const getUser = async (req: any, res: Response, next: NextFunction) => {
     });
 };
 
+const getMyRecipes = async (req: any,res: Response, next: NextFunction) =>{
+    const recipes = await userModel.getMyRecipes({userId: req.currentUser.userId});
+
+    return res.status(200).json({
+        recipes
+    });
+}
+
 const getFavoriteRecipes = async (req: any, res: Response, next: NextFunction) => {
     const recipes = await userModel.getFavoriteRecipes({id: req.currentUser.id});
 
@@ -129,4 +137,4 @@ const deleteSpecificUser = async (req: any, res: Response, next: NextFunction) =
     }
 }
 
-export default {creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser, getAllUsers, deleteSpecificUser}
+export default {creatUser, loginUser,getMyRecipes, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser, getAllUsers, deleteSpecificUser}

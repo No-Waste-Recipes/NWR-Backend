@@ -70,6 +70,12 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         user,
     });
 });
+const getMyRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const recipes = yield userModel.getMyRecipes({ userId: req.currentUser.id });
+    return res.status(200).json({
+        recipes
+    });
+});
 const getFavoriteRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.getFavoriteRecipes({ id: req.currentUser.id });
     return res.status(200).json({
@@ -116,5 +122,5 @@ const deleteSpecificUser = (req, res, next) => __awaiter(void 0, void 0, void 0,
         return res.status(401);
     }
 });
-exports.default = { creatUser, loginUser, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser, getAllUsers, deleteSpecificUser };
+exports.default = { creatUser, loginUser, getMyRecipes, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser, getAllUsers, deleteSpecificUser };
 //# sourceMappingURL=controller.js.map

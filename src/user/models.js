@@ -67,6 +67,11 @@ class UserModel {
             return yield prisma.user.findFirst({ where: { id } });
         });
     }
+    getMyRecipes({ userId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.recipe.findMany({ where: { userId } });
+        });
+    }
     getFavoriteRecipes({ id }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma.favorite.findMany({

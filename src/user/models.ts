@@ -51,6 +51,10 @@ export class UserModel {
         return await prisma.user.findFirst( {where: { id}} );
     }
 
+    async getMyRecipes({userId}){
+        return await prisma.recipe.findMany( {where: {userId}} );
+    }
+
     async getFavoriteRecipes({ id }) {
         return await prisma.favorite.findMany({
             where: {
