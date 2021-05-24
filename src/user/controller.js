@@ -26,8 +26,9 @@ const models_1 = require("./models");
 const userModel = new models_1.UserModel();
 const creatUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userModel.getUserByEmail(req.body);
-    if (user)
-        return res.status(201).send({ "errors": [{ "email": "email already exists" }] });
+    if (user) {
+        return res.status(201).send({ errors: [{ email: "email already exists" }] });
+    }
     yield hashPassword(req);
     const result = yield userModel.createUser(req.body);
     return res.status(201).send(result);
@@ -39,7 +40,7 @@ const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userModel.updateUser(req.currentUser.id, Object.assign({}, req.body));
-    return res.status(200).json({ user, });
+    return res.status(200).json({ user });
 });
 const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userModel.deleteUser({ id: req.currentUser.id });
@@ -55,11 +56,11 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     const isMatch = yield bcrypt.compare(pass, user.password);
     if (!isMatch) {
-        return res.status(401).send('Email or password is wrong');
+        return res.status(401).send("Email or password is wrong");
     }
     const secretKey = process.env.SECRET_JWT || "";
     const token = jwt.sign({ user_id: user.id.toString() }, secretKey, {
-        expiresIn: '24h'
+        expiresIn: "24h",
     });
     const { password } = user, userWithoutPassword = __rest(user, ["password"]);
     res.send({ user: Object.assign({}, userWithoutPassword), token });
@@ -73,38 +74,38 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 const getMyRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.getMyRecipes({ userId: req.currentUser.id });
     return res.status(200).json({
-        recipes
+        recipes,
     });
 });
 const getFavoriteRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.getFavoriteRecipes({ id: req.currentUser.id });
     return res.status(200).json({
-        recipes
+        recipes,
     });
 });
 const setFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.setFavoriteRecipe({ userId: req.currentUser.id, recipeId: req.body.recipeId });
     return res.status(200).json({
-        recipes
+        recipes,
     });
 });
 const deleteFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.deleteFavoriteRecipe({ userId: req.currentUser.id, recipeId: req.body.recipeId });
     return res.status(200).json({
-        recipes
+        recipes,
     });
 });
 const findFavoriteRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const recipes = yield userModel.findFavoriteRecipe({ userId: req.currentUser.id, recipeId: req.params.id });
     return res.status(200).json({
-        recipes
+        recipes,
     });
 });
 const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.currentUser.role == "ADMIN") {
+    if (req.currentUser.role === "ADMIN") {
         const users = yield userModel.getAllUsers();
         return res.status(200).json({
-            users
+            users,
         });
     }
     else {
@@ -112,15 +113,16 @@ const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 const deleteSpecificUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.currentUser.role == "ADMIN") {
+    if (req.currentUser.role === "ADMIN") {
         const user = yield userModel.deleteUser({ id: parseInt(req.params.id) });
         return res.status(200).json({
-            user
+            user,
         });
     }
     else {
         return res.status(401);
     }
 });
-exports.default = { creatUser, loginUser, getMyRecipes, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe, findFavoriteRecipe, getUser, deleteUser, updateUser, getAllUsers, deleteSpecificUser };
+exports.default = { creatUser, loginUser, getMyRecipes, getFavoriteRecipes, setFavoriteRecipe, deleteFavoriteRecipe,
+    findFavoriteRecipe, getUser, deleteUser, updateUser, getAllUsers, deleteSpecificUser };
 //# sourceMappingURL=controller.js.map
