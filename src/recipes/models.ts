@@ -1,6 +1,5 @@
-import {PrismaClient} from "@prisma/client";
+import prisma from '../../client'
 import { Prisma } from "@prisma/client";
-const prisma = new PrismaClient()
 import slugify from "slugify"
 
 export class RecipeModel {
