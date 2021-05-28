@@ -27,4 +27,18 @@ test('should not create new user', () => __awaiter(void 0, void 0, void 0, funct
     singleton_1.prismaMock.user.create.mockResolvedValue(user);
     yield expect(userModel.createUser(user)).resolves.toEqual(user);
 }));
+test('should update user', () => __awaiter(void 0, void 0, void 0, function* () {
+    const user = {
+        email: 'joepboekhold+24@gmail.com',
+        username: 'Joep54',
+        password: 'Welkom01',
+        first_name: 'Joep',
+        last_name: 'Boekhold',
+        description: 'test',
+        id: 6,
+        role: Role.User
+    };
+    singleton_1.prismaMock.user.update.mockResolvedValue(user);
+    yield expect(userModel.updateUser(6, user)).resolves.toEqual(user);
+}));
 //# sourceMappingURL=models.test.js.map

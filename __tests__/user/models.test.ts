@@ -5,7 +5,7 @@ const userModel = new UserModel();
 
 
 
-test('should not create new user', async () => {
+test('should create new user', async () => {
     const user = {
         email: 'joepboekhold+24@gmail.com',
         username: 'Joep53',
@@ -20,4 +20,22 @@ test('should not create new user', async () => {
     prismaMock.user.create.mockResolvedValue(user)
 
     await expect(userModel.createUser(user)).resolves.toEqual(user)
+})
+
+
+test ('should update user', async () => {
+    const user = {
+        email: 'joepboekhold+24@gmail.com',
+        username: 'Joep54',
+        password: 'Welkom01',
+        first_name: 'Joep',
+        last_name: 'Boekhold',
+        description: 'test',
+        id: 6,
+        role: Role.User
+    }
+
+    prismaMock.user.update.mockResolvedValue(user)
+
+    await expect(userModel.updateUser(6, user)).resolves.toEqual(user)
 })
