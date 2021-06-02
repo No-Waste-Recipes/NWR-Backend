@@ -17,7 +17,7 @@ test('should create new user', async () => {
         role: Role.User
     }
 
-    prismaMock.user.create.mockResolvedValue(user)
+    //prismaMock.user.create.mockResolvedValue(user)
 
     await expect(userModel.createUser(user)).resolves.toEqual(user)
 })
@@ -35,7 +35,7 @@ test ('should update user', async () => {
         role: Role.User
     }
 
-    prismaMock.user.update.mockResolvedValue(user)
+    //prismaMock.user.update.mockResolvedValue(user)
 
     await expect(userModel.updateUser(6, user)).resolves.toEqual(user)
 })
