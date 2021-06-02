@@ -25,7 +25,7 @@ test('should create new recipe', async () => {
     const userId = 6
     const file_name = 'uploads/uiensoep.jpg'
 
-    prismaMock.recipe.create.mockResolvedValue(recipeControl)
+    //prismaMock.recipe.create.mockResolvedValue(recipeControl)
 
     await expect(recipeModel.createRecipe(recipe, userId, file_name)).resolves.toEqual(recipeControl)
 })

@@ -9,11 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const singleton_1 = require("../../singleton");
 const models_1 = require("../../src/user/models");
 const Role = require('../../src/utils/userRoles');
 const userModel = new models_1.UserModel();
-test('should not create new user', () => __awaiter(void 0, void 0, void 0, function* () {
+test('should create new user', () => __awaiter(void 0, void 0, void 0, function* () {
     const user = {
         email: 'joepboekhold+24@gmail.com',
         username: 'Joep53',
@@ -24,7 +23,7 @@ test('should not create new user', () => __awaiter(void 0, void 0, void 0, funct
         id: 6,
         role: Role.User
     };
-    singleton_1.prismaMock.user.create.mockResolvedValue(user);
+    //prismaMock.user.create.mockResolvedValue(user)
     yield expect(userModel.createUser(user)).resolves.toEqual(user);
 }));
 test('should update user', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -38,7 +37,7 @@ test('should update user', () => __awaiter(void 0, void 0, void 0, function* () 
         id: 6,
         role: Role.User
     };
-    singleton_1.prismaMock.user.update.mockResolvedValue(user);
+    //prismaMock.user.update.mockResolvedValue(user)
     yield expect(userModel.updateUser(6, user)).resolves.toEqual(user);
 }));
 //# sourceMappingURL=models.test.js.map
