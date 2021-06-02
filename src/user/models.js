@@ -8,14 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+const client_1 = __importDefault(require("../../client"));
 class UserModel {
     createUser({ email, username, password, first_name, last_name, description }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.user.create({
+            return yield client_1.default.user.create({
                 data: {
                     email,
                     username,
@@ -29,7 +31,7 @@ class UserModel {
     }
     updateUser(userId, { email, username, first_name, last_name, description }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.user.update({
+            return yield client_1.default.user.update({
                 where: { id: parseInt(userId) },
                 data: {
                     email,
@@ -43,19 +45,19 @@ class UserModel {
     }
     getUserByEmail({ email }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.user.findUnique({
+            return yield client_1.default.user.findUnique({
                 where: { email }
             });
         });
     }
     deleteUser({ id }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.user.delete({ where: { id } });
+            return yield client_1.default.user.delete({ where: { id } });
         });
     }
     loginUser({ email, password: pass }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.user.findUnique({
+            return yield client_1.default.user.findUnique({
                 where: {
                     email
                 }
@@ -64,7 +66,7 @@ class UserModel {
     }
     getUser({ id }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.user.findFirst({ where: { id } });
+            return yield client_1.default.user.findFirst({ where: { id } });
         });
     }
     getMyRecipes({ userId }) {
@@ -74,7 +76,7 @@ class UserModel {
     }
     getFavoriteRecipes({ id }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.favorite.findMany({
+            return yield client_1.default.favorite.findMany({
                 where: {
                     userId: id
                 },
@@ -86,14 +88,14 @@ class UserModel {
     }
     setFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            let duplicateCheck = yield prisma.favorite.findMany({
+            let duplicateCheck = yield client_1.default.favorite.findMany({
                 where: {
                     userId: userId,
                     recipeId: recipeId
                 },
             });
             if (duplicateCheck.length == 0) {
-                return yield prisma.favorite.create({
+                return yield client_1.default.favorite.create({
                     data: {
                         recipeId,
                         userId
@@ -107,7 +109,7 @@ class UserModel {
     }
     deleteFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.favorite.deleteMany({
+            return yield client_1.default.favorite.deleteMany({
                 where: {
                     userId: userId,
                     recipeId: recipeId
@@ -117,7 +119,7 @@ class UserModel {
     }
     findFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.favorite.findMany({
+            return yield client_1.default.favorite.findMany({
                 where: {
                     userId: userId,
                     recipeId: parseInt(recipeId)
@@ -127,7 +129,7 @@ class UserModel {
     }
     getAllUsers() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.user.findMany();
+            return yield client_1.default.user.findMany();
         });
     }
 }

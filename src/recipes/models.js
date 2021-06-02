@@ -13,14 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipeModel = void 0;
-const client_1 = require("@prisma/client");
+const client_1 = __importDefault(require("../../client"));
 const client_2 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
 const slugify_1 = __importDefault(require("slugify"));
 class RecipeModel {
     getRecipe({ slug }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.recipe.findUnique({
+            return yield client_1.default.recipe.findUnique({
                 where: {
                     slug: slug,
                 },
@@ -62,8 +61,8 @@ class RecipeModel {
                 else {
                     ids.push(parseInt(ingredients));
                 }
-                const recipes = yield prisma.$queryRaw `SELECT r.* FROM recipe r join recipeingredients ri on ri.recipeId = r.id where ri.ingredientId in (${client_2.Prisma.join(ids)}) group by r.id order by ri.ingredientId DESC`;
-                let ingredientsList = yield prisma.ingredient.findMany({
+                const recipes = yield client_1.default.$queryRaw `SELECT r.* FROM recipe r join recipeingredients ri on ri.recipeId = r.id where ri.ingredientId in (${client_2.Prisma.join(ids)}) group by r.id order by ri.ingredientId DESC`;
+                let ingredientsList = yield client_1.default.ingredient.findMany({
                     where: {
                         id: {
                             in: ids
@@ -72,12 +71,12 @@ class RecipeModel {
                 });
                 return { 'ingredients': ingredientsList, 'recipes': recipes };
             }
-            return { 'recipes': yield prisma.recipe.findMany() };
+            return { 'recipes': yield client_1.default.recipe.findMany() };
         });
     }
     getPopularRecipes() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.recipe.findMany({
+            return yield client_1.default.recipe.findMany({
                 orderBy: [
                     {
                         popularity: 'desc',
@@ -87,18 +86,19 @@ class RecipeModel {
             });
         });
     }
-    createRecipe({ title, description, ingredients }, userId) {
+    createRecipe({ title, description, ingredients }, userId, file_name) {
         return __awaiter(this, void 0, void 0, function* () {
-            const recipe = yield prisma.recipe.create({
+            const recipe = yield client_1.default.recipe.create({
                 data: {
                     title: title,
                     slug: slugify_1.default(title),
                     description,
                     userId: userId,
+                    photo: `uploads/${file_name}`
                 },
             });
-            for (let ingredient of ingredients) {
-                yield prisma.recipeIngredients.create({
+            for (let ingredient of JSON.parse(ingredients)) {
+                yield client_1.default.recipeIngredients.create({
                     data: {
                         recipeId: recipe.id, ingredientId: ingredient.id
                     }
@@ -109,7 +109,7 @@ class RecipeModel {
     }
     approveRecipes() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.recipe.findMany({
+            return yield client_1.default.recipe.findMany({
                 where: {
                     status: "TO_BE_APPROVED"
                 }
@@ -118,7 +118,7 @@ class RecipeModel {
     }
     approveRecipe(slug, status) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.recipe.update({
+            return yield client_1.default.recipe.update({
                 where: {
                     slug: slug
                 },
@@ -130,28 +130,28 @@ class RecipeModel {
     }
     deleteRecipe({ recipeId, user }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const recipe = yield prisma.recipe.findUnique({
+            const recipe = yield client_1.default.recipe.findUnique({
                 where: {
                     id: parseInt(recipeId)
                 }
             });
             if (recipe.userId == user.id || user.role == "ADMIN") {
-                yield prisma.recipeIngredients.deleteMany({
+                yield client_1.default.recipeIngredients.deleteMany({
                     where: {
                         recipeId: parseInt(recipeId)
                     }
                 });
-                yield prisma.favorite.deleteMany({
+                yield client_1.default.favorite.deleteMany({
                     where: {
                         recipeId: parseInt(recipeId)
                     }
                 });
-                yield prisma.comment.deleteMany({
+                yield client_1.default.comment.deleteMany({
                     where: {
                         recipeId: parseInt(recipeId)
                     }
                 });
-                return yield prisma.recipe.delete({
+                return yield client_1.default.recipe.delete({
                     where: {
                         id: parseInt(recipeId)
                     }
@@ -161,13 +161,13 @@ class RecipeModel {
     }
     deleteComment({ commentId, user }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const comment = yield prisma.comment.findUnique({
+            const comment = yield client_1.default.comment.findUnique({
                 where: {
                     id: parseInt(commentId)
                 }
             });
             if (comment.userId == user.id || user.role == "ADMIN") {
-                return yield prisma.comment.delete({
+                return yield client_1.default.comment.delete({
                     where: {
                         id: parseInt(commentId)
                     }
@@ -178,7 +178,7 @@ class RecipeModel {
     }
     createComment({ slug, text, userId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const recipe = yield prisma.recipe.findUnique({
+            const recipe = yield client_1.default.recipe.findUnique({
                 where: {
                     slug: slug
                 },
@@ -186,7 +186,7 @@ class RecipeModel {
                     id: true
                 }
             });
-            return yield prisma.comment.create({
+            return yield client_1.default.comment.create({
                 data: {
                     recipeId: recipe.id,
                     userId: userId,

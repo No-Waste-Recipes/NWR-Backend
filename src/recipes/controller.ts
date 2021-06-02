@@ -16,7 +16,7 @@ const getPopularRecipes = async (req: Request, res: Response, next: NextFunction
 }
 
 const CreateRecipe = async (req: any, res: Response, next: NextFunction) => {
-    const result = await recipe.createRecipe(req.body, req.currentUser.id)
+    const result = await recipe.createRecipe(req.body, req.currentUser.id, req.res.req.file.filename)
 
     return res.status(200).json({
         result

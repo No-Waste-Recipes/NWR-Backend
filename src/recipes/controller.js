@@ -22,7 +22,7 @@ const getPopularRecipes = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     });
 });
 const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield recipe.createRecipe(req.body, req.currentUser.id);
+    const result = yield recipe.createRecipe(req.body, req.currentUser.id, req.res.req.file.filename);
     return res.status(200).json({
         result
     });

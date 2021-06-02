@@ -2,11 +2,12 @@ import express from 'express';
 import controller from './controller';
 const auth = require('../middleware/auth');
 const Role = require('../utils/userRoles');
+import { upload } from '../utils/fileUploading';
 
 const router = express.Router();
 
 router.get('', controller.getRecipes)
-router.post('', auth(), controller.CreateRecipe)
+router.post('', auth(), upload.single('photo'), controller.CreateRecipe)
 router.delete('/:id', auth(), controller.deleteRecipe)
 router.get('/popular', controller.getPopularRecipes)
 router.get('/approve', auth(Role.Admin), controller.getApproveRecipes)
