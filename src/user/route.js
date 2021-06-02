@@ -13,6 +13,7 @@ router.get('/favorites', auth(), controller_1.default.getFavoriteRecipes);
 router.post('/favorites', auth(), controller_1.default.setFavoriteRecipe);
 router.delete('/favorites', auth(), controller_1.default.deleteFavoriteRecipe);
 router.get('/favorites/:id', auth(), controller_1.default.findFavoriteRecipe);
+router.get('/myrecipes', auth(), controller_1.default.getMyRecipes);
 router.get('', auth(), controller_1.default.getUser);
 router.delete('', auth(), controller_1.default.deleteUser);
 router.put('', auth(), controller_1.default.updateUser);
