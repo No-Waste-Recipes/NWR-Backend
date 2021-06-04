@@ -5,7 +5,7 @@ import slugify from "slugify"
 export class RecipeModel {
 
     async getRecipe({slug}) {
-        return await prisma.recipe.findUnique({
+        const recipe = await prisma.recipe.findUnique({
             where: {
                 slug: slug,
             },
@@ -33,6 +33,19 @@ export class RecipeModel {
                 }
             }
         })
+
+        await prisma.recipe.update({
+            where: {
+                slug: slug,
+            },
+            data: {
+                popularity: {
+                    increment: 1,
+                }
+            }
+        })
+
+        return recipe
     }
 
     async getRecipes({ingredients}) {
