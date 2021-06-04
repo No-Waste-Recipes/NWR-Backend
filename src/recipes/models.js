@@ -19,7 +19,7 @@ const slugify_1 = __importDefault(require("slugify"));
 class RecipeModel {
     getRecipe({ slug }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield client_1.default.recipe.findUnique({
+            const recipe = yield client_1.default.recipe.findUnique({
                 where: {
                     slug: slug,
                 },
@@ -47,6 +47,17 @@ class RecipeModel {
                     }
                 }
             });
+            yield client_1.default.recipe.update({
+                where: {
+                    slug: slug,
+                },
+                data: {
+                    popularity: {
+                        increment: 1,
+                    }
+                }
+            });
+            return recipe;
         });
     }
     getRecipes({ ingredients }) {
@@ -109,6 +120,7 @@ class RecipeModel {
     }
     updateRecipe({ title, description, ingredients }, userId, file_name, slug) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(file_name + '  ,.....model');
             const recipe = yield client_1.default.recipe.update({
                 where: {
                     slug: slug
@@ -116,16 +128,16 @@ class RecipeModel {
                 data: {
                     title: title,
                     description,
-                    photo: `uploads/${file_name}`
+                    photo: file_name
                 },
             });
-            // for(let ingredient of JSON.parse(ingredients)){
-            //     await prisma.recipeIngredients.create({
-            //         data: {
-            //             recipeId: recipe.id, ingredientId: ingredient.id
-            //         }
-            //     })
-            // }
+            for (let ingredient of JSON.parse(ingredients)) {
+                yield client_1.default.recipeIngredients.create({
+                    data: {
+                        recipeId: recipe.id, ingredientId: ingredient.id
+                    }
+                });
+            }
             return recipe;
         });
     }

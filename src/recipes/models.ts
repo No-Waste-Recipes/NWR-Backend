@@ -108,6 +108,7 @@ export class RecipeModel {
     }
 
     async updateRecipe({ title, description, ingredients}, userId, file_name, slug: string) {
+        console.log(file_name + '  ,.....model')
         const recipe = await prisma.recipe.update({
            where: {
                 slug: slug
@@ -115,17 +116,17 @@ export class RecipeModel {
            data: {
             title: title,
             description,
-            photo: `uploads/${file_name}`
+            photo: file_name
         },
 
         })
-        // for(let ingredient of JSON.parse(ingredients)){
-        //     await prisma.recipeIngredients.create({
-        //         data: {
-        //             recipeId: recipe.id, ingredientId: ingredient.id
-        //         }
-        //     })
-        // }
+        for(let ingredient of JSON.parse(ingredients)){
+            await prisma.recipeIngredients.create({
+                data: {
+                    recipeId: recipe.id, ingredientId: ingredient.id
+                }
+            })
+        }
         return recipe
     }
 
