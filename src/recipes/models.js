@@ -107,6 +107,28 @@ class RecipeModel {
             return recipe;
         });
     }
+    updateRecipe({ title, description, ingredients }, userId, file_name, slug) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const recipe = yield client_1.default.recipe.update({
+                where: {
+                    slug: slug
+                },
+                data: {
+                    title: title,
+                    description,
+                    photo: `uploads/${file_name}`
+                },
+            });
+            // for(let ingredient of JSON.parse(ingredients)){
+            //     await prisma.recipeIngredients.create({
+            //         data: {
+            //             recipeId: recipe.id, ingredientId: ingredient.id
+            //         }
+            //     })
+            // }
+            return recipe;
+        });
+    }
     approveRecipes() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.default.recipe.findMany({

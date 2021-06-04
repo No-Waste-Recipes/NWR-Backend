@@ -23,6 +23,14 @@ const CreateRecipe = async (req: any, res: Response, next: NextFunction) => {
     })
 }
 
+const updateRecipe = async (req: any, res: Response, next: NextFunction) => {
+    const result = await recipe.updateRecipe(req.body, req.currentUser.id, req.res.req.file.filename, req.params.slug)
+
+    return res.status(200).json({
+        result
+    })
+}
+
 const getRecipe = async (req: Request, res: Response, next: NextFunction) => {
     const result = await recipe.getRecipe({slug: req.params.slug})
 
@@ -74,4 +82,4 @@ const approveRecipe = async (req: any, res: Response, next: NextFunction) => {
     })
 }
 
-export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe}
+export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe, updateRecipe}

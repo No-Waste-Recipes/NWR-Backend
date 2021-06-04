@@ -94,6 +94,28 @@ export class RecipeModel {
         return recipe
     }
 
+    async updateRecipe({ title, description, ingredients}, userId, file_name, slug: string) {
+        const recipe = await prisma.recipe.update({
+           where: {
+                slug: slug
+           },
+           data: {
+            title: title,
+            description,
+            photo: `uploads/${file_name}`
+        },
+
+        })
+        // for(let ingredient of JSON.parse(ingredients)){
+        //     await prisma.recipeIngredients.create({
+        //         data: {
+        //             recipeId: recipe.id, ingredientId: ingredient.id
+        //         }
+        //     })
+        // }
+        return recipe
+    }
+
     async approveRecipes() {
         return await prisma.recipe.findMany({
             where: {
