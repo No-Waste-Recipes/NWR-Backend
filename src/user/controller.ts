@@ -27,7 +27,19 @@ const hashPassword = async (req) => {
     }
 };
 
+
+
 const updateUser = async (req: any, res: Response, next: NextFunction) => {
+    if (req.body.password != null && req.body.newPassword != null) {
+        const isMatch = await bcrypt.compare(req.body.password, req.currentUser.password);
+        if (isMatch) {
+            const newPassword = await bcrypt.hash(req.body.newPassword, 8);
+            await userModel.updateUserPassword(req.currentUser.id,newPassword)
+        }
+        if (!isMatch) {
+            return res.status(403).json("Password is wrong");
+        }
+    }
     const user = await userModel.updateUser(req.currentUser.id, {...req.body});
     return res.status(200).json({user});
 };

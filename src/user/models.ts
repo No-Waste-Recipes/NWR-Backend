@@ -1,4 +1,4 @@
-import prisma from '../../client'
+import prisma from "../../client";
 
 export class UserModel {
 
@@ -28,6 +28,15 @@ export class UserModel {
         });
     }
 
+    public async updateUserPassword(userId, password){
+        return await prisma.user.update({
+            where: {id: parseInt(userId)},
+            data:{
+                password
+            }
+        })
+    }
+
     public async getUserByEmail({email}) {
         return await prisma.user.findUnique({
             where: {email},
@@ -47,7 +56,15 @@ export class UserModel {
     }
 
     public async getUser({id}) {
-        return await prisma.user.findFirst( {where: { id}} );
+        return await prisma.user.findFirst( {where: { id},
+            select:{
+                id:true,
+                email: true,
+                username: true,
+                first_name:true,
+                last_name:true,
+                description:true,
+            }});
     }
 
     public async getMyRecipes({userId}) {

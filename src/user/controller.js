@@ -39,6 +39,16 @@ const hashPassword = (req) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.body.password != null && req.body.newPassword != null) {
+        const isMatch = yield bcrypt.compare(req.body.password, req.currentUser.password);
+        if (isMatch) {
+            const newPassword = yield bcrypt.hash(req.body.newPassword, 8);
+            yield userModel.updateUserPassword(req.currentUser.id, newPassword);
+        }
+        if (!isMatch) {
+            return res.status(403).json("Password is wrong");
+        }
+    }
     const user = yield userModel.updateUser(req.currentUser.id, Object.assign({}, req.body));
     return res.status(200).json({ user });
 });
