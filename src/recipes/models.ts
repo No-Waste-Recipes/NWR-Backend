@@ -116,7 +116,7 @@ export class RecipeModel {
            data: {
             title: title,
             description,
-            photo: file_name
+            photo: `uploads/${file_name}`
         },
 
         })
