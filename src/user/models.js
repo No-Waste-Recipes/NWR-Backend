@@ -92,6 +92,11 @@ class UserModel {
             return yield client_1.default.recipe.findMany({ where: { userId } });
         });
     }
+    getMyRecipes({ userId }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.recipe.findMany({ where: { userId } });
+        });
+    }
     getFavoriteRecipes({ id }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.default.favorite.findMany({
