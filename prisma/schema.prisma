@@ -47,6 +47,7 @@ model Recipe {
   popularity  Int                 @default(0)
   Favorite    Favorite[]
   photo       String
+  reported    Boolean             @default(false)
 }
 
 model RecipeIngredients {
@@ -90,4 +91,5 @@ model Comment {
   recipe   Recipe @relation(fields: [recipeId], references: [id])
   userId   Int
   recipeId Int
+  reported    Boolean             @default(false)
 }

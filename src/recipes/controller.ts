@@ -23,6 +23,22 @@ const CreateRecipe = async (req: any, res: Response, next: NextFunction) => {
     })
 }
 
+const reportRecipe = async (req: any, res: Response, next: NextFunction) => {
+    const result = await recipe.reportRecipe({slug: req.params.slug})
+
+    return res.status(200).json({
+        result
+    })
+}
+
+const reportComment = async (req: any, res: Response, next: NextFunction) => {
+    const result = await recipe.reportComment({commentId: req.params.id})
+
+    return res.status(200).json({
+        result
+    })
+}
+
 const getRecipe = async (req: Request, res: Response, next: NextFunction) => {
     const result = await recipe.getRecipe({slug: req.params.slug})
 
@@ -74,4 +90,4 @@ const approveRecipe = async (req: any, res: Response, next: NextFunction) => {
     })
 }
 
-export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe}
+export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe, reportRecipe, reportComment}

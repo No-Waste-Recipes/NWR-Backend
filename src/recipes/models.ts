@@ -162,6 +162,28 @@ export class RecipeModel {
         throw new Error()
     }
 
+    async reportComment({commentId}) {
+        return await prisma.comment.update({
+            where: {
+                id: parseInt(commentId)
+            },
+            data: {
+                reported: true
+            }
+        })
+    }
+
+    async reportRecipe({slug}) {
+        return await prisma.recipe.update({
+            where: {
+                slug: slug,
+            },
+            data: {
+                reported: true
+            }
+        })
+    }
+
     async createComment({slug, text, userId}) {
         const recipe = await prisma.recipe.findUnique({
             where: {
