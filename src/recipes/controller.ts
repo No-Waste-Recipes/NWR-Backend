@@ -24,7 +24,14 @@ const CreateRecipe = async (req: any, res: Response, next: NextFunction) => {
 }
 
 const updateRecipe = async (req: any, res: Response, next: NextFunction) => {
-    const result = await recipe.updateRecipe(req.body, req.currentUser.id, req.file.filename, req.params.slug)
+    console.log(req.params)
+    let result
+
+    if (req.res.req.file == undefined) {
+        result = await recipe.updateRecipe(req.body, req.params.slug)
+    } else {
+        result = await recipe.updateRecipe(req.body, req.params.slug, req.res.req.file.filename)
+    }
     
     return res.status(200).json({
         result

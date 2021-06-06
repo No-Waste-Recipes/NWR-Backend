@@ -28,7 +28,14 @@ const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     });
 });
 const updateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield recipe.updateRecipe(req.body, req.currentUser.id, req.file.filename, req.params.slug);
+    console.log(req.params);
+    let result;
+    if (req.res.req.file == undefined) {
+        result = yield recipe.updateRecipe(req.body, req.params.slug);
+    }
+    else {
+        result = yield recipe.updateRecipe(req.body, req.params.slug, req.res.req.file.filename);
+    }
     return res.status(200).json({
         result
     });

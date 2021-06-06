@@ -118,23 +118,46 @@ class RecipeModel {
             return recipe;
         });
     }
-    updateRecipe({ title, description, ingredients }, userId, file_name, slug) {
+    updateRecipe({ title, description, ingredients }, slug, file_name) {
         return __awaiter(this, void 0, void 0, function* () {
-            const recipe = yield client_1.default.recipe.update({
+            console.log(slug);
+            if (file_name == undefined) {
+                yield client_1.default.recipe.updateMany({
+                    where: {
+                        slug: slug
+                    },
+                    data: {
+                        title: title,
+                        description,
+                    }
+                });
+            }
+            else {
+                yield client_1.default.recipe.update({
+                    where: {
+                        slug: slug
+                    },
+                    data: {
+                        title: title,
+                        description,
+                        photo: `uploads/${file_name}`
+                    }
+                });
+            }
+            const recipe = yield client_1.default.recipe.findFirst({
                 where: {
                     slug: slug
-                },
-                data: {
-                    title: title,
-                    description,
-                    photo: `uploads/${file_name}`
                 }
             });
+            console.log(recipe);
+            console.log(slug);
+            // delete ingredients
             yield client_1.default.recipeIngredients.deleteMany({
                 where: {
                     recipeId: recipe.id
                 }
             });
+            // create ingredients again.
             for (let ingredient of JSON.parse(ingredients)) {
                 yield client_1.default.recipeIngredients.create({
                     data: {
