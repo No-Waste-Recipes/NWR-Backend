@@ -120,7 +120,6 @@ class RecipeModel {
     }
     updateRecipe({ title, description, ingredients }, userId, file_name, slug) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(file_name + '  ,.....model');
             const recipe = yield client_1.default.recipe.update({
                 where: {
                     slug: slug
@@ -128,8 +127,13 @@ class RecipeModel {
                 data: {
                     title: title,
                     description,
-                    photo: file_name
-                },
+                    photo: `uploads/${file_name}`
+                }
+            });
+            yield client_1.default.recipeIngredients.deleteMany({
+                where: {
+                    recipeId: recipe.id
+                }
             });
             for (let ingredient of JSON.parse(ingredients)) {
                 yield client_1.default.recipeIngredients.create({
