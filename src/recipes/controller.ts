@@ -24,7 +24,7 @@ const CreateRecipe = async (req: any, res: Response, next: NextFunction) => {
 }
 
 const reportRecipe = async (req: any, res: Response, next: NextFunction) => {
-    const result = await recipe.reportRecipe({slug: req.params.slug})
+    const result = await recipe.reportRecipe({slug: req.params.slug, status: req.body.status})
 
     return res.status(200).json({
         result
@@ -32,7 +32,7 @@ const reportRecipe = async (req: any, res: Response, next: NextFunction) => {
 }
 
 const reportComment = async (req: any, res: Response, next: NextFunction) => {
-    const result = await recipe.reportComment({commentId: req.params.id})
+    const result = await recipe.reportComment({commentId: req.params.id, status: req.body.status})
 
     return res.status(200).json({
         result
@@ -46,6 +46,24 @@ const getRecipe = async (req: Request, res: Response, next: NextFunction) => {
         result
     })
 }
+
+const getReportedRecipes = async (req: Request, res: Response, next: NextFunction) => {
+    const result = await recipe.getReportedRecipes()
+
+    return res.status(200).json({
+        result
+    })
+}
+
+
+const getReportedComments = async (req: Request, res: Response, next: NextFunction) => {
+    const result = await recipe.getReportedComments()
+
+    return res.status(200).json({
+        result
+    })
+}
+
 
 const deleteRecipe = async (req: any, res: Response, next: NextFunction) => {
     const result = await recipe.deleteRecipe({recipeId: req.params.id, user: req.currentUser})
@@ -90,4 +108,4 @@ const approveRecipe = async (req: any, res: Response, next: NextFunction) => {
     })
 }
 
-export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe, reportRecipe, reportComment}
+export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe, reportRecipe, reportComment, getReportedComments, getReportedRecipes}

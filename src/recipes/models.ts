@@ -162,23 +162,46 @@ export class RecipeModel {
         throw new Error()
     }
 
-    async reportComment({commentId}) {
+    async reportComment({commentId, status}) {
         return await prisma.comment.update({
             where: {
                 id: parseInt(commentId)
             },
             data: {
-                reported: true
+                reported: status
             }
         })
     }
 
-    async reportRecipe({slug}) {
+    async getReportedComments() {
+        return await prisma.comment.findMany({
+            where: {
+                reported: true
+            },
+            include: {
+                recipe: {
+                    select: {
+                        slug: true
+                    }
+                }
+            }
+        })
+    }
+
+    async reportRecipe({slug, status}) {
         return await prisma.recipe.update({
             where: {
                 slug: slug,
             },
             data: {
+                reported: status
+            }
+        })
+    }
+
+    async getReportedRecipes() {
+        return await prisma.recipe.findMany({
+            where: {
                 reported: true
             }
         })
