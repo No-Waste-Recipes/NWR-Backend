@@ -28,7 +28,7 @@ const CreateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     });
 });
 const updateRecipe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield recipe.updateRecipe(req.body, req.currentUser.id, req.res.req.file.filename, req.params.slug);
+    const result = yield recipe.updateRecipe(req.body, req.currentUser.id, req.file.filename, req.params.slug);
     return res.status(200).json({
         result
     });

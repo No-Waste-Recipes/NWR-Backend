@@ -24,7 +24,7 @@ const CreateRecipe = async (req: any, res: Response, next: NextFunction) => {
 }
 
 const updateRecipe = async (req: any, res: Response, next: NextFunction) => {
-    const result = await recipe.updateRecipe(req.body, req.currentUser.id, req.res.req.file.filename, req.params.slug)
+    const result = await recipe.updateRecipe(req.body, req.currentUser.id, req.file.filename, req.params.slug)
     
     return res.status(200).json({
         result
