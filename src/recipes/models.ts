@@ -58,7 +58,27 @@ export class RecipeModel {
             } else {
                 ids.push(parseInt(ingredients))
             }
-            const recipes = await prisma.$queryRaw`SELECT r.* FROM recipe r join recipeingredients ri on ri.recipeId = r.id where ri.ingredientId in (${Prisma.join(ids)}) group by r.id order by ri.ingredientId DESC`;
+            const recipesList = await prisma.$queryRaw`SELECT r.id FROM recipe r join recipeingredients ri on ri.recipeId = r.id where ri.ingredientId in (${Prisma.join(ids)}) group by r.id order by ri.ingredientId DESC`;
+
+            const list = []
+            recipesList.forEach((recipe) => {
+                list.push(recipe.id)
+            })
+
+            const recipes = await prisma.recipe.findMany({
+                where: {
+                    id: {
+                        in: list
+                    }
+                },
+                include: {
+                    ingredients: {
+                        include: {
+                            ingredient: true
+                        }
+                    },
+                }
+            })
 
             let ingredientsList = await prisma.ingredient.findMany({
                 where: {
@@ -66,14 +86,21 @@ export class RecipeModel {
                         in: ids
                     }
                 }
-            })
+            });
 
             return {'ingredients': ingredientsList, 'recipes': recipes }
         }
-        return {'recipes': await prisma.recipe.findMany() }
-
-
-
+        return {'recipes':
+                await prisma.recipe.findMany({
+                    include: {
+                        ingredients: {
+                            include: {
+                                ingredient: true
+                            }
+                        },
+                    }
+                })
+        }
     }
 
     async getPopularRecipes() {
