@@ -108,7 +108,6 @@ export class RecipeModel {
     }
 
     async updateRecipe({ title, description, ingredients},slug: string, file_name?) {
-        console.log(slug)
         if(file_name == undefined){
             await prisma.recipe.updateMany({
                 where: {
@@ -138,8 +137,7 @@ export class RecipeModel {
                 slug: slug
             }
         })
-        console.log(recipe)
-        console.log(slug)
+
         // delete ingredients
         await prisma.recipeIngredients.deleteMany({
             where: {

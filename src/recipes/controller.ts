@@ -24,7 +24,6 @@ const CreateRecipe = async (req: any, res: Response, next: NextFunction) => {
 }
 
 const updateRecipe = async (req: any, res: Response, next: NextFunction) => {
-    console.log(req.params)
     let result
 
     if (req.res.req.file == undefined) {
