@@ -19,7 +19,7 @@ const slugify_1 = __importDefault(require("slugify"));
 class RecipeModel {
     getRecipe({ slug }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield client_1.default.recipe.findUnique({
+            const recipe = yield client_1.default.recipe.findUnique({
                 where: {
                     slug: slug,
                 },
@@ -47,6 +47,17 @@ class RecipeModel {
                     }
                 }
             });
+            yield client_1.default.recipe.update({
+                where: {
+                    slug: slug,
+                },
+                data: {
+                    popularity: {
+                        increment: 1,
+                    }
+                }
+            });
+            return recipe;
         });
     }
     getRecipes({ ingredients }) {
