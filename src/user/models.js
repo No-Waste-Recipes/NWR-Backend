@@ -24,7 +24,7 @@ class UserModel {
                     password,
                     first_name,
                     last_name,
-                    description
+                    description,
                 },
             });
         });
@@ -39,14 +39,14 @@ class UserModel {
                     first_name,
                     last_name,
                     description,
-                }
+                },
             });
         });
     }
     getUserByEmail({ email }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.default.user.findUnique({
-                where: { email }
+                where: { email },
             });
         });
     }
@@ -59,8 +59,8 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.default.user.findUnique({
                 where: {
-                    email
-                }
+                    email,
+                },
             });
         });
     }
@@ -71,34 +71,34 @@ class UserModel {
     }
     getMyRecipes({ userId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma.recipe.findMany({ where: { userId } });
+            return yield client_1.default.recipe.findMany({ where: { userId } });
         });
     }
     getFavoriteRecipes({ id }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.default.favorite.findMany({
                 where: {
-                    userId: id
+                    userId: id,
                 },
                 include: {
-                    recipe: true
-                }
+                    recipe: true,
+                },
             });
         });
     }
     setFavoriteRecipe({ userId, recipeId }) {
         return __awaiter(this, void 0, void 0, function* () {
-            let duplicateCheck = yield client_1.default.favorite.findMany({
+            const duplicateCheck = yield client_1.default.favorite.findMany({
                 where: {
-                    userId: userId,
-                    recipeId: recipeId
+                    userId,
+                    recipeId,
                 },
             });
             if (duplicateCheck.length == 0) {
                 return yield client_1.default.favorite.create({
                     data: {
                         recipeId,
-                        userId
+                        userId,
                     },
                 });
             }
@@ -111,9 +111,9 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.default.favorite.deleteMany({
                 where: {
-                    userId: userId,
-                    recipeId: recipeId
-                }
+                    userId,
+                    recipeId,
+                },
             });
         });
     }
@@ -121,8 +121,8 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.default.favorite.findMany({
                 where: {
-                    userId: userId,
-                    recipeId: parseInt(recipeId)
+                    userId,
+                    recipeId: parseInt(recipeId),
                 },
             });
         });

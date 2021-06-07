@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('', controller.getRecipes)
 router.post('', auth(), upload.single('photo'), controller.CreateRecipe)
+router.post('/:slug', auth(), upload.single('photo'), controller.updateRecipe)
 router.delete('/:id', auth(), controller.deleteRecipe)
 router.get('/popular', controller.getPopularRecipes)
 router.get('/approve', auth(Role.Admin), controller.getApproveRecipes)
