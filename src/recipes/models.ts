@@ -107,6 +107,56 @@ export class RecipeModel {
         return recipe
     }
 
+    async updateRecipe({ title, description, ingredients},slug: string, file_name?) {
+        if(file_name == undefined){
+            await prisma.recipe.updateMany({
+                where: {
+                     slug: slug
+                },
+                data: {
+                    title: title,
+                    description,
+                }
+     
+             })
+        } else {
+            await prisma.recipe.update({
+                where: {
+                     slug: slug
+                },
+                data: {
+                    title: title,
+                    description,
+                    photo: `uploads/${file_name}`
+                }
+             })
+        }
+
+        const recipe = await prisma.recipe.findFirst({
+            where: {
+                slug: slug
+            }
+        })
+
+        // delete ingredients
+        await prisma.recipeIngredients.deleteMany({
+            where: {
+                recipeId: recipe.id
+            }
+        })
+
+        // create ingredients again.
+        for(let ingredient of JSON.parse(ingredients)){
+            await prisma.recipeIngredients.create({
+                data: {
+                    recipeId: recipe.id, ingredientId: ingredient.id
+                }
+            })
+        }
+
+        return recipe
+    }
+
     async approveRecipes() {
         return await prisma.recipe.findMany({
             where: {

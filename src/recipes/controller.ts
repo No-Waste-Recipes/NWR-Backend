@@ -23,6 +23,20 @@ const CreateRecipe = async (req: any, res: Response, next: NextFunction) => {
     })
 }
 
+const updateRecipe = async (req: any, res: Response, next: NextFunction) => {
+    let result
+
+    if (req.res.req.file == undefined) {
+        result = await recipe.updateRecipe(req.body, req.params.slug)
+    } else {
+        result = await recipe.updateRecipe(req.body, req.params.slug, req.res.req.file.filename)
+    }
+    
+    return res.status(200).json({
+        result
+    })
+}
+
 const getRecipe = async (req: Request, res: Response, next: NextFunction) => {
     const result = await recipe.getRecipe({slug: req.params.slug})
 
@@ -74,4 +88,4 @@ const approveRecipe = async (req: any, res: Response, next: NextFunction) => {
     })
 }
 
-export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe}
+export default {getRecipes, CreateRecipe, getPopularRecipes, getRecipe, createComment, getApproveRecipes, approveRecipe, deleteComment, deleteRecipe, updateRecipe}

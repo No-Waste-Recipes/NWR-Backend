@@ -10,6 +10,7 @@ const fileUploading_1 = require("../utils/fileUploading");
 const router = express_1.default.Router();
 router.get('', controller_1.default.getRecipes);
 router.post('', auth(), fileUploading_1.upload.single('photo'), controller_1.default.CreateRecipe);
+router.post('/:slug', auth(), fileUploading_1.upload.single('photo'), controller_1.default.updateRecipe);
 router.delete('/:id', auth(), controller_1.default.deleteRecipe);
 router.get('/popular', controller_1.default.getPopularRecipes);
 router.get('/approve', auth(Role.Admin), controller_1.default.getApproveRecipes);
